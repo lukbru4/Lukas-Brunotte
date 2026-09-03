@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lukas Investments</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #EDE7D9;
+    --paper-raised: #F5F1E6;
+    --ink: #221F1A;
+    --ink-soft: #6B6558;
+    --rule: #D3CAB4;
+    --accent: #5C6B2F;
+    --accent-dark: #3F4A22;
+    --up: #3E6B3A;
+    --down: #A63D2E;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  body {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 48px 24px 96px;
+  }
+
+  h1, h2 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    margin: 0;
+  }
+
+  .masthead {
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 20px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+  }
+
+  .masthead h1 {
+    font-size: clamp(32px, 6vw, 44px);
+    letter-spacing: -0.01em;
+  }
+
+  .masthead .date {
+    font-size: 13px;
+    color: var(--ink-soft);
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-bottom: 28px;
+    font-size: 14px;
+    color: var(--ink-soft);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 1px;
+  }
+  .back-link:hover { color: var(--ink); border-color: var(--ink-soft); }
+
+  .grid-wrap {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    align-items: start;
+    gap: 24px;
+    margin-top: 32px;
+  }
+
+  section {
+    border: 1px solid var(--rule);
+    background: var(--paper-raised);
+    padding: 24px 26px;
+    margin-top: 0;
+  }
+
+  section.wide {
+    grid-column: 1 / -1;
+  }
+
+  .num {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 2px;
+    padding: 1px 6px;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 10px;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .section-head h2 {
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+  }
+
+  .section-head .meta {
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+
+  @media (max-width: 480px) {
+    section { padding: 20px 18px; }
+  }
+
+  /* Priorities */
+  .task-list { margin-top: 4px; }
+  .task {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .task:last-child { border-bottom: none; }
+  .task input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--accent);
+    flex-shrink: 0;
+  }
+  .task label {
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .task-note { font-size: 12px; color: var(--ink-soft); display: block; margin-top: 2px; }
+
+  /* Table rows */
+  .row {
+    display: grid;
+    grid-template-columns: 1.6fr 0.7fr 0.9fr 0.9fr 0.7fr;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--rule);
+    align-items: center;
+  }
+  .row:last-child { border-bottom: none; }
+  .row.head {
+    font-size: 12px;
+    color: var(--ink-soft);
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 8px;
+  }
+  .row .name { font-size: 15px; }
+  .row .name .isin { display:block; font-size: 11px; color: var(--ink-soft); margin-top: 2px; }
+  .row .num { text-align: right; font-variant-numeric: tabular-nums; font-size: 15px; }
+  .row.clickable { cursor: pointer; }
+  .row.clickable:hover { background: var(--paper-raised); }
+  .up { color: var(--up); }
+  .down { color: var(--down); }
+
+  .expand-panel {
+    padding: 16px 8px 22px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .expand-empty { font-size: 13px; color: var(--ink-soft); line-height: 1.6; }
+  .spark { width: 100%; height: 56px; display: block; margin-bottom: 4px; }
+  .spark.up { color: var(--up); }
+  .spark.down { color: var(--down); }
+  .expand-panel .perf-overview {
+    grid-template-columns: repeat(7, 1fr);
+    margin-top: 14px;
+    border-top: 1px solid var(--rule);
+  }
+  @media (max-width: 700px) {
+    .expand-panel .perf-overview { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  .totals {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-top: 16px;
+    margin-top: 4px;
+    border-top: 2px solid var(--ink);
+  }
+  .totals .label { font-size: 14px; color: var(--ink-soft); }
+  .totals .value { font-family: 'Fraunces', Georgia, serif; font-size: 26px; }
+  .totals .sub { font-size: 13px; margin-top: 2px; }
+
+  .perf-overview {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0;
+    margin-top: 24px;
+    border-top: 1px solid var(--rule);
+  }
+  .perf-item {
+    padding: 12px 8px;
+    text-align: center;
+    border-right: 1px solid var(--rule);
+  }
+  .perf-item:last-child { border-right: none; }
+  .perf-item .label {
+    font-size: 11px;
+    color: var(--ink-soft);
+    margin-bottom: 4px;
+  }
+  .perf-item .value {
+    font-size: 15px;
+    font-variant-numeric: tabular-nums;
+  }
+  @media (max-width: 700px) {
+    .perf-overview { grid-template-columns: repeat(4, 1fr); }
+    .perf-item:nth-child(4) { border-right: none; }
+  }
+
+  /* Planned positions */
+  .planned-row {
+    display: grid;
+    grid-template-columns: 1.4fr 0.8fr 0.8fr 1fr;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--rule);
+    align-items: center;
+  }
+  .planned-row:last-child { border-bottom: none; }
+  .planned-row.head {
+    font-size: 12px;
+    color: var(--ink-soft);
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 8px;
+  }
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    padding: 2px 8px;
+    border: 1px solid var(--ink-soft);
+    color: var(--ink-soft);
+    border-radius: 2px;
+  }
+  .add-hint {
+    margin-top: 16px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+  .add-hint code {
+    background: var(--paper-raised);
+    padding: 1px 5px;
+    border-radius: 2px;
+    font-size: 12px;
+  }
+
+  /* Watchlist */
+  .watch-empty { font-size: 13px; color: var(--ink-soft); padding: 10px 0; }
+  .watch-row {
+    display: grid;
+    grid-template-columns: 1.6fr 0.9fr 0.9fr;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--rule);
+    align-items: center;
+  }
+  .watch-row:last-child { border-bottom: none; }
+
+  /* Depot-Ausblick */
+  .ausblick-net {
+    font-size: 15px;
+    margin-bottom: 14px;
+  }
+  .ausblick-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .chip {
+    font-size: 13px;
+    padding: 6px 12px;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    color: var(--ink-soft);
+  }
+  .struktur-title {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-top: 8px;
+    margin-bottom: 10px;
+  }
+  .struktur-row {
+    display: grid;
+    grid-template-columns: 140px 1fr 90px;
+    gap: 12px;
+    align-items: center;
+    padding: 7px 0;
+  }
+  .struktur-row .bar-track {
+    height: 8px;
+    background: var(--paper-raised);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .struktur-row .bar-fill {
+    height: 100%;
+    background: var(--accent);
+  }
+  .struktur-row .pct { text-align: right; font-variant-numeric: tabular-nums; font-size: 13px; color: var(--ink-soft); }
+
+  /* Briefing */
+  .briefing-item {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .briefing-item:last-child { border-bottom: none; }
+  .briefing-item .tag { margin-bottom: 6px; }
+  .briefing-item .headline { font-size: 15px; line-height: 1.4; }
+  .briefing-item .src { font-size: 12px; color: var(--ink-soft); margin-top: 4px; }
+
+  /* Notes */
+  textarea {
+    width: 100%;
+    min-height: 140px;
+    margin-top: 12px;
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 14px;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    resize: vertical;
+  }
+  textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .save-state {
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-top: 8px;
+    height: 16px;
+  }
+
+  /* Income log */
+  .income-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .income-form input {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 14px;
+    padding: 10px 12px;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    background: var(--paper-raised);
+    color: var(--ink);
+  }
+  .income-form button {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 14px;
+    padding: 10px 16px;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  .income-form button:hover { background: var(--accent-dark); }
+  .income-hint { font-size: 12px; color: var(--ink-soft); margin-top: 8px; }
+
+  .income-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 14px;
+  }
+  .income-table thead th {
+    text-align: left;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 8px;
+  }
+  .income-table thead th:nth-child(2) { text-align: right; }
+  .income-table tbody td {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .income-table tbody td:nth-child(2) { text-align: right; font-variant-numeric: tabular-nums; }
+  .income-table tbody td:last-child { text-align: right; }
+  .income-table .del {
+    color: var(--ink-soft);
+    cursor: pointer;
+    font-size: 12px;
+    border: none;
+    background: none;
+  }
+  .income-table .del:hover { color: var(--accent); }
+  .income-table tfoot td {
+    padding-top: 12px;
+    border-top: 2px solid var(--ink);
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 17px;
+  }
+  .income-table tfoot td:nth-child(2) { text-align: right; }
+  .income-empty td { font-size: 13px; color: var(--ink-soft); padding: 12px 0; }
+
+  footer {
+    margin-top: 56px;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+    font-size: 12px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+
+  @media (max-width: 560px) {
+    .row { grid-template-columns: 1.4fr 0.8fr 1fr; }
+    .row .num:nth-child(4) { display: none; }
+    .planned-row { grid-template-columns: 1.2fr 0.8fr 1fr; }
+    .planned-row .tag-col { display: none; }
+    .income-form { grid-template-columns: 1fr 1fr; }
+    .income-row { grid-template-columns: 1fr 1fr; row-gap: 4px; }
+  }
+</style>
+</head>
+<body>
+
+  <a class="back-link" href="https://jakob44444.github.io/Jakob-Dashboard/">← Zum Hauptdashboard</a>
+
+  <div class="masthead">
+    <h1>Lukas Investments</h1>
+    <div class="date" id="today"></div>
+  </div>
+
+  <div class="grid-wrap">
+
+  <!-- ================= PRIORITÄTEN ================= -->
+  <section>
+    <div class="section-head">
+      <h2><span class="num">01</span> Prioritäten</h2>
+      <span class="meta" id="task-meta"></span>
+    </div>
+    <div class="task-list" id="task-list">
+      <div class="task">
+        <input type="checkbox" id="t1">
+        <label for="t1">Hausaufgaben / Lernen<span class="task-note">Spanisch, Schule</span></label>
+      </div>
+      <div class="task">
+        <input type="checkbox" id="t2">
+        <label for="t2">Tägliche Claude-Einheit<span class="task-note">Skool-Aufgabe / Übung</span></label>
+      </div>
+      <div class="task">
+        <input type="checkbox" id="t3">
+        <label for="t3">Depot & Marktdaten checken</label>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AKTIEN-WATCHLIST ================= -->
+  <section>
+    <div class="section-head">
+      <h2><span class="num">02</span> Watchlist</h2>
+      <span class="meta" id="watchlist-meta"></span>
+    </div>
+    <div id="watchlist-rows"></div>
+    <div class="add-hint">
+      Neue Position beobachten: im Script unten bei <code>watchlist</code> einen Eintrag mit Name und Ticker ergänzen.
+    </div>
+  </section>
+
+  <!-- ================= DEPOT (AKTUELL) ================= -->
+  <section class="wide">
+    <div class="section-head">
+      <h2><span class="num">03</span> Depot — aktuell</h2>
+      <span class="meta" id="depot-meta">Finanzfluss · Stand 01.09.2026</span>
+    </div>
+
+    <div class="row head">
+      <div>Position</div>
+      <div class="num">Kurs</div>
+      <div class="num">Wert</div>
+      <div class="num">Einstieg</div>
+      <div class="num">Perf.</div>
+    </div>
+
+    <div id="depot-rows"></div>
+
+    <div class="totals">
+      <div>
+        <div class="label">Gesamtwert Depot</div>
+        <div class="value" id="depot-total"></div>
+      </div>
+      <div style="text-align:right;">
+        <div class="label">Gesamt seit Einstieg</div>
+        <div class="value" id="depot-perf"></div>
+      </div>
+    </div>
+
+    <div class="perf-overview" id="perf-overview"></div>
+    <div class="add-hint">Live-Kurse laufen über Twelve Data. Kostenlosen Key auf <code>twelvedata.com/register</code> holen und im Script oben bei <code>TWELVE_DATA_KEY</code> eintragen — ohne Key bleiben die manuell gepflegten Werte stehen.</div>
+  </section>
+
+  <!-- ================= DEPOT-AUSBLICK ================= -->
+  <section class="wide">
+    <div class="section-head">
+      <h2><span class="num">04</span> Depot-Ausblick</h2>
+      <span class="meta">Einordnung</span>
+    </div>
+    <div id="ausblick-summary"></div>
+    <div class="struktur-title">Struktur nach Thema</div>
+    <div id="ausblick-struktur"></div>
+    <div class="add-hint" id="ausblick-note"></div>
+  </section>
+
+  <!-- ================= BRIEFING ================= -->
+  <section>
+    <div class="section-head">
+      <h2><span class="num">05</span> Briefing</h2>
+      <span class="meta">passend zu deinem Depot</span>
+    </div>
+    <div id="briefing-items"></div>
+    <div class="add-hint">Keine Anlageberatung, keine Kursprognose. Lädt automatisch tagesaktuelle Schlagzeilen zu deinen Themen; falls das nicht klappt, steht hier eine manuell gepflegte Einordnung.</div>
+  </section>
+
+  <!-- ================= GEPLANTE POSITIONEN ================= -->
+  <section class="wide">
+    <div class="section-head">
+      <h2><span class="num">06</span> Geplante Positionen</h2>
+      <span class="meta">noch nicht gekauft</span>
+    </div>
+
+    <div class="planned-row head">
+      <div>Position</div>
+      <div class="num tag-col">Anteil</div>
+      <div class="num">Geplant</div>
+      <div>Status</div>
+    </div>
+
+    <div id="planned-rows"></div>
+
+    <div class="totals">
+      <div>
+        <div class="label">Summe geplant</div>
+        <div class="value" id="planned-total"></div>
+      </div>
+      <div style="text-align:right;">
+        <div class="label">Depot + geplant</div>
+        <div class="value" id="grand-total"></div>
+      </div>
+    </div>
+
+    <div class="add-hint">
+      Weitere Position ergänzen: im Script unten bei <code>plannedPositions</code> eine Zeile nach demselben Muster hinzufügen — Name, Betrag, Status (<code>"geplant"</code> oder <code>"im Depot"</code>). Genauso funktioniert es für <code>depotPositions</code>, wenn ein neuer ETF ins Depot kommt.
+    </div>
+  </section>
+
+  <!-- ================= NOTIZEN ================= -->
+  <section>
+    <div class="section-head">
+      <h2><span class="num">07</span> Notizen</h2>
+    </div>
+    <textarea id="notes" placeholder="Gedanken, Beobachtungen, was als Nächstes ansteht… z.B. wo eine Einnahme investiert wurde."></textarea>
+    <div class="save-state" id="notes-state"></div>
+  </section>
+
+  <!-- ================= EINNAHMEN & INVESTITION ================= -->
+  <section>
+    <div class="section-head">
+      <h2><span class="num">08</span> Einnahmen & Investition</h2>
+    </div>
+
+    <div class="income-form">
+      <input type="text" id="income-date" placeholder="Datum (z.B. 01.09.)">
+      <input type="text" id="income-amount" placeholder="Betrag (€)">
+      <button onclick="addIncome()">Eintragen</button>
+    </div>
+    <div class="income-hint">Details zu Quelle oder Anlage gern unten bei „Notizen" festhalten.</div>
+
+    <table class="income-table">
+      <thead>
+        <tr><th>Datum</th><th>Betrag</th><th></th></tr>
+      </thead>
+      <tbody id="income-list"></tbody>
+      <tfoot>
+        <tr><td>Summe</td><td id="income-total-cell"></td><td></td></tr>
+      </tfoot>
+    </table>
+  </section>
+
+  </div><!-- /grid-wrap -->
+
+  <footer>
+    Keine Anlageberatung, keine Kursprognose. Werte manuell im Code gepflegt — Notizen und Einnahmen-Einträge werden lokal im Browser gespeichert (nur auf diesem Gerät, solange die Seite unter derselben Adresse läuft).
+  </footer>
+
+<script>
+  // ---------- Datum ----------
+  document.getElementById('today').textContent = new Date().toLocaleDateString('de-DE', {
+    weekday: 'long', day: '2-digit', month: 'long', year: 'numeric'
+  });
+
+  // ---------- DEPOT (aktuell) — Stückzahl + Einstieg manuell pflegen ----------
+  // ticker = Yahoo-Finance-Symbol für Live-Kurs. null = kein handelbares Live-Symbol
+  // (aktiv gemanagte Fonds wie AGIF/DWS/BIT haben nur eine täglich veröffentlichte NAV, keinen Live-Kurs).
+  const depotPositions = [
+    { name: "iShares Core MSCI World",        isin: "IE00B4L5Y983", ticker: "EUNL.DE", stueck: 59.58, kurs: 127.49, wert: 7595.03, einstieg: 6300.09, tag: -0.07, kategorie: "Global / Breit gestreut" },
+    { name: "BIT Global Technology Leaders",  isin: "DE000A2N8143", ticker: null,      stueck: 9.16,  kurs: 724.75, wert: 6638.71, einstieg: 6475.20, tag: 0.06,  kategorie: "Tech" },
+    { name: "iShares Core MSCI EM IMI",       isin: "IE00BKM4GZ66", ticker: "IS3N.DE", stueck: 89.45, kurs: 47.65,  wert: 4261.74, einstieg: 3197.40, tag: 0.16,  kategorie: "Emerging Markets" },
+    { name: "AGIF Allianz Global AI",         isin: "LU1548497186", ticker: null,      stueck: 7,     kurs: 344.32, wert: 2410.24, einstieg: 2510.76, tag: -1.35, kategorie: "KI" },
+    { name: "Gold",                           isin: "XC0009655157", ticker: "4GLD.DE", stueck: 0.32,  kurs: null,   wert: 1230.62, einstieg: 919.06,  tag: -0.49, kategorie: "Gold / Absicherung" },
+    { name: "DWS Smart Industrial Tech.",     isin: "DE0005152482", ticker: null,      stueck: 4.05,  kurs: 279.20, wert: 1130.76, einstieg: 1134.65, tag: -0.26, kategorie: "Industrie / Tech" },
+    { name: "iShares Nasdaq US Biotech.",     isin: "IE00BYXG2H39", ticker: "2B70.DE", stueck: 22.9,  kurs: 8.93,   wert: 204.47,  einstieg: 204.36,  tag: 0.06,  kategorie: "Biotech" },
+    { name: "VanEck Space Innovators",        isin: "IE000YU9K6K2", ticker: "JEDI.DE", stueck: 2.92,  kurs: 68.76,  wert: 200.78,  einstieg: 201.19,  tag: -0.20, kategorie: "Raumfahrt" },
+  ];
+
+  // ---------- WATCHLIST — ETFs/Aktien ergänzen, die du im Blick behältst (noch keine Position) ----------
+  const watchlist = [
+    { name: "iShares S&P 500 Health Care Sector", isin: "IE00B43HR379", ticker: "QDVG.DE", kategorie: "Gesundheit" },
+    { name: "Vanguard FTSE All-World High Dividend Yield", isin: "IE00BK5BR626", ticker: "VGWE.DE", kategorie: "Dividende" },
+    { name: "iShares Core MSCI Europe",          isin: "IE00B4K48X80", ticker: "EUNK.DE", kategorie: "Europa" },
+  ];
+
+  // ---------- BRIEFING — kurze, manuell aktualisierte Einordnung passend zum Depot ----------
+  const briefing = [
+    { tag: "Märkte", headline: "Ölpreise und Anleiherenditen steigen weltweit nach neuerlicher Eskalation zwischen den USA und dem Iran — Aktienmärkte in Europa, Asien und den USA stehen unter Druck.", src: "Marktlage · 02.09.2026" },
+    { tag: "Deutschland", headline: "Der DAX setzt seine Korrektur vom jüngsten Rekordhoch fort; US-Technologiewerte leiden zusätzlich unter Inflationssorgen — relevant für deine World- und Tech-Positionen.", src: "Marktlage · 02.09.2026" },
+    { tag: "KI", headline: "Große KI- und Chip-Unternehmen legen diese Woche Quartalszahlen vor; die Reaktion dürfte auch auf Fonds mit KI-Schwerpunkt wie deinen AGIF-Fonds ausstrahlen.", src: "Marktlage · 02.09.2026" },
+  ];
+
+  // ---------- DEPOT-PERFORMANCE nach Zeitraum — Prozentwerte hier manuell eintragen ----------
+  // (aus Finanzfluss > Übersicht ablesen und hier als Zahl eintragen, z.B. tag: -0.79)
+  const depotPerformance = {
+    tag:   null,   // Tagesperformance
+    woche: null,   // Wochenperformance
+    monat: null,   // Monatsperformance
+    ytd:   null,   // Year to Date
+    j1:    null,   // 1 Jahr
+    j5:    null,   // 5 Jahre
+    max:   null,   // maximale Performance (seit Einstieg gesamt)
+  };
+
+  // ---------- GEPLANTE POSITIONEN — hier ergänzen, wenn neu geplant wird ----------
+  const plannedPositions = [
+    { name: "Apple",     ticker: "AAPL",  betrag: 150 },
+    { name: "Microsoft", ticker: "MSFT",  betrag: 150 },
+    { name: "Alphabet",  ticker: "GOOGL", betrag: 150 },
+    { name: "Amazon",    ticker: "AMZN",  betrag: 150 },
+  ];
+
+  const eur = (n) => n.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
+
+  // ---------- Watchlist rendern ----------
+  function renderWatchlist() {
+    const el = document.getElementById('watchlist-rows');
+    const meta = document.getElementById('watchlist-meta');
+    if (watchlist.length === 0) {
+      el.innerHTML = '<div class="watch-empty">Noch keine Positionen auf der Watchlist.</div>';
+      meta.textContent = '';
+      return;
+    }
+    meta.textContent = `${watchlist.length} beobachtet`;
+    el.innerHTML = watchlist.map(w => `
+      <div class="watch-row">
+        <div class="name">${w.name}<span class="isin">${w.isin} · ${w.kategorie}</span></div>
+        <div class="num">${w.kurs ? eur(w.kurs) : '—'}</div>
+        <div class="num"><span class="tag">${w.live ? 'live' : 'Watchlist'}</span></div>
+      </div>
+    `).join('');
+  }
+  renderWatchlist();
+
+  Promise.allSettled(watchlist.map(w => fetchLivePrice(w.ticker))).then(results => {
+    results.forEach((r, i) => {
+      if (r.status === 'fulfilled') {
+        watchlist[i].kurs = r.value;
+        watchlist[i].live = true;
+      }
+    });
+    renderWatchlist();
+  });
+
+  // ---------- Depot-Ausblick rendern ----------
+  function renderAusblick() {
+    const totalWert = depotPositions.reduce((s, p) => s + p.wert, 0);
+    const netEuro = depotPositions.reduce((s, p) => s + (p.tag != null ? (p.tag / 100) * p.wert : 0), 0);
+    const netPct = (netEuro / totalWert) * 100;
+    const up = depotPositions.filter(p => p.tag > 0).length;
+    const down = depotPositions.filter(p => p.tag < 0).length;
+    const neutral = depotPositions.length - up - down;
+    const withTag = depotPositions.filter(p => p.tag != null);
+    const treiber = withTag.reduce((a, b) => (b.tag > a.tag ? b : a));
+    const bremse = withTag.reduce((a, b) => (b.tag < a.tag ? b : a));
+
+    const netClass = netPct >= 0 ? 'up' : 'down';
+    document.getElementById('ausblick-summary').innerHTML = `
+      <div class="ausblick-net">Heute: <span class="${netClass}">${netPct >= 0 ? '+' : ''}${eur(netEuro)} · ${netPct >= 0 ? '+' : ''}${netPct.toFixed(2)}%</span> über alle ${depotPositions.length} Positionen.</div>
+      <div class="ausblick-chips">
+        <span class="chip">${up} im Plus</span>
+        <span class="chip">${neutral} neutral</span>
+        <span class="chip">${down} im Minus</span>
+        <span class="chip">Treiber: ${treiber.name} +${treiber.tag.toFixed(2)}%</span>
+        <span class="chip">Bremse: ${bremse.name} ${bremse.tag.toFixed(2)}%</span>
+      </div>
+    `;
+
+    const byCat = {};
+    depotPositions.forEach(p => { byCat[p.kategorie] = (byCat[p.kategorie] || 0) + p.wert; });
+    const sorted = Object.entries(byCat).sort((a, b) => b[1] - a[1]);
+    document.getElementById('ausblick-struktur').innerHTML = sorted.map(([name, wert]) => {
+      const pct = (wert / totalWert) * 100;
+      return `
+        <div class="struktur-row">
+          <div>${name}</div>
+          <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+          <div class="pct">${pct.toFixed(0)}% · ${eur(wert)}</div>
+        </div>
+      `;
+    }).join('');
+
+    const top = sorted[0];
+    const topPct = ((top[1] / totalWert) * 100).toFixed(0);
+    document.getElementById('ausblick-note').textContent =
+      `Größtes Thema: ${top[0]} mit ${topPct}% des Depots. Bewegungen dort prägen deinen Tag am stärksten — Klumpenrisiko im Blick behalten.`;
+  }
+  renderAusblick();
+
+  // ---------- Briefing rendern (statisch als Fallback, danach Versuch mit echten Live-News) ----------
+  function renderBriefing(items) {
+    document.getElementById('briefing-items').innerHTML = items.map(b => `
+      <div class="briefing-item">
+        <span class="tag">${b.tag}</span>
+        <div class="headline">${b.headline}</div>
+        <div class="src">${b.src}</div>
+      </div>
+    `).join('');
+  }
+  renderBriefing(briefing);
+
+  // Versucht, tagesaktuelle Schlagzeilen zu Themen aus deinem Depot zu laden (Google News via RSS-Proxy).
+  // Klappt der Abruf nicht (z.B. lokal geöffnet, Proxy überlastet), bleibt die obige, manuell
+  // eingetragene Einordnung stehen.
+  async function fetchNews(query) {
+    const rss = `https://news.google.com/rss/search?q=${encodeURIComponent(query)}&hl=de&gl=DE&ceid=DE:de`;
+    const api = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rss)}`;
+    const res = await fetch(api);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    if (data.status !== 'ok' || !data.items || !data.items.length) throw new Error('keine Treffer');
+    return data.items[0];
+  }
+
+  const briefingTopics = [
+    { tag: "MSCI World / Welt-ETF", query: "MSCI World ETF" },
+    { tag: "Gold", query: "Goldpreis" },
+    { tag: "KI-Aktien", query: "künstliche Intelligenz Aktien" },
+    { tag: "Biotech", query: "Biotech Aktien Nasdaq" },
+  ];
+
+  async function updateBriefingLive() {
+    const results = await Promise.allSettled(briefingTopics.map(t => fetchNews(t.query)));
+    const items = [];
+    results.forEach((r, i) => {
+      if (r.status === 'fulfilled') {
+        const it = r.value;
+        const date = it.pubDate ? new Date(it.pubDate).toLocaleDateString('de-DE') : '';
+        items.push({ tag: briefingTopics[i].tag, headline: it.title, src: `${date}` });
+      }
+    });
+    if (items.length > 0) renderBriefing(items);
+  }
+  updateBriefingLive();
+
+  // ---------- Depot rendern (wird nach dem Live-Abruf erneut aufgerufen) ----------
+  const depotRowsEl = document.getElementById('depot-rows');
+  const expandedIndices = new Set();
+
+  function renderDepot() {
+    depotRowsEl.innerHTML = '';
+    let depotTotalWert = 0, depotTotalEinstieg = 0;
+
+    depotPositions.forEach((p, i) => {
+      depotTotalWert += p.wert;
+      depotTotalEinstieg += p.einstieg;
+      const perf = ((p.wert - p.einstieg) / p.einstieg) * 100;
+      const perfClass = perf >= 0 ? 'up' : 'down';
+      const row = document.createElement('div');
+      row.className = 'row clickable';
+      row.innerHTML = `
+        <div class="name">${p.name}${p.live ? ' <span class="tag">live</span>' : ''}<span class="isin">${p.isin}</span></div>
+        <div class="num">${p.kurs ? eur(p.kurs) : "—"}</div>
+        <div class="num">${eur(p.wert)}</div>
+        <div class="num">${eur(p.einstieg)}</div>
+        <div class="num ${perfClass}">${perf >= 0 ? '+' : ''}${perf.toFixed(1)}%</div>
+      `;
+      row.addEventListener('click', () => toggleExpand(i));
+      depotRowsEl.appendChild(row);
+
+      if (expandedIndices.has(i)) {
+        const panel = document.createElement('div');
+        panel.className = 'expand-panel';
+        panel.innerHTML = expandPanelHTML(p);
+        depotRowsEl.appendChild(panel);
+      }
+    });
+
+    document.getElementById('depot-total').textContent = eur(depotTotalWert);
+    const depotPerfPct = ((depotTotalWert - depotTotalEinstieg) / depotTotalEinstieg) * 100;
+    const depotPerfEl = document.getElementById('depot-perf');
+    depotPerfEl.textContent = (depotPerfPct >= 0 ? '+' : '') + depotPerfPct.toFixed(1) + '%';
+    depotPerfEl.className = 'value ' + (depotPerfPct >= 0 ? 'up' : 'down');
+
+    document.getElementById('planned-total') && document.getElementById('grand-total') &&
+      (document.getElementById('grand-total').textContent = eur(depotTotalWert + plannedTotalCache));
+  }
+
+  function toggleExpand(i) {
+    if (expandedIndices.has(i)) {
+      expandedIndices.delete(i);
+      renderDepot();
+      return;
+    }
+    expandedIndices.add(i);
+    const p = depotPositions[i];
+    if (p.ticker && !p.history && !p.historyError) {
+      p.historyLoading = true;
+      renderDepot();
+      fetchHistory(p.ticker).then(points => {
+        p.history = points;
+        p.periods = computePeriodReturns(points);
+      }).catch(() => {
+        p.historyError = true;
+      }).finally(() => {
+        p.historyLoading = false;
+        renderDepot();
+      });
+    } else {
+      renderDepot();
+    }
+  }
+
+  const periodLabels = { tag: "Tag", woche: "Woche", monat: "Monat", ytd: "YTD", j1: "1 Jahr", j5: "5 Jahre", max: "Max" };
+
+  function expandPanelHTML(p) {
+    if (!p.ticker) {
+      return `<div class="expand-empty">Für diesen Fonds gibt es keine Live-Kurshistorie (nur eine täglich veröffentlichte NAV, kein Börsenkurs). Zeiträume kannst du hier manuell eintragen, falls gewünscht.</div>`;
+    }
+    if (p.historyLoading) {
+      return `<div class="expand-empty">Lade Kursverlauf…</div>`;
+    }
+    if (p.historyError || !p.history) {
+      return `<div class="expand-empty">Kursverlauf gerade nicht abrufbar.</div>`;
+    }
+    const periods = { ...p.periods, max: ((p.wert - p.einstieg) / p.einstieg) * 100 };
+    const items = Object.entries(periodLabels).map(([key, label]) => {
+      const v = periods[key];
+      const cls = v == null ? '' : (v >= 0 ? 'up' : 'down');
+      return `<div class="perf-item"><div class="label">${label}</div><div class="value ${cls}">${v == null ? '—' : (v >= 0 ? '+' : '') + v.toFixed(1) + '%'}</div></div>`;
+    }).join('');
+    return `${sparkline(p.history)}<div class="perf-overview">${items}</div>`;
+  }
+
+  function sparkline(points) {
+    const closes = points.map(pt => pt.c);
+    const min = Math.min(...closes), max = Math.max(...closes);
+    const w = 600, h = 60;
+    const step = closes.length > 1 ? w / (closes.length - 1) : w;
+    const path = closes.map((c, i) => {
+      const x = i * step;
+      const y = h - ((c - min) / (max - min || 1)) * (h - 4) - 2;
+      return `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`;
+    }).join(' ');
+    const trend = closes[closes.length - 1] >= closes[0] ? 'up' : 'down';
+    return `<svg viewBox="0 0 ${w} ${h}" class="spark ${trend}" preserveAspectRatio="none"><path d="${path}" fill="none" stroke="currentColor" stroke-width="2"/></svg>`;
+  }
+
+  let plannedTotalCache = 0;
+  renderDepot();
+
+  // ---------- Live-Kurse & Historie abrufen (Twelve Data) ----------
+  // Kostenlosen API-Key holen: https://twelvedata.com/register (kein Kreditkarte nötig)
+  // und hier eintragen. Ohne gültigen Key bleiben die manuell eingetragenen Werte stehen —
+  // kein Fehler sichtbar, einfach die gewohnte Rückfalllösung.
+  const TWELVE_DATA_KEY = "506c3d92fdb94855b61173b093a58841";
+
+  function toTwelveDataSymbol(ticker) {
+    if (ticker.endsWith('.DE')) {
+      return { symbol: ticker.replace('.DE', ''), mic: 'XETR' };
+    }
+    return { symbol: ticker, mic: null };
+  }
+
+  async function fetchLivePrice(ticker) {
+    if (!TWELVE_DATA_KEY || TWELVE_DATA_KEY === "DEIN_API_KEY_HIER") throw new Error('kein API-Key hinterlegt');
+    const { symbol, mic } = toTwelveDataSymbol(ticker);
+    let url = `https://api.twelvedata.com/price?symbol=${symbol}&apikey=${TWELVE_DATA_KEY}`;
+    if (mic) url += `&mic_code=${mic}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    if (!data.price) throw new Error('kein Kurs in Antwort');
+    return parseFloat(data.price);
+  }
+
+  async function fetchHistory(ticker) {
+    if (!TWELVE_DATA_KEY || TWELVE_DATA_KEY === "DEIN_API_KEY_HIER") throw new Error('kein API-Key hinterlegt');
+    const { symbol, mic } = toTwelveDataSymbol(ticker);
+    let url = `https://api.twelvedata.com/time_series?symbol=${symbol}&interval=1day&outputsize=1300&apikey=${TWELVE_DATA_KEY}`;
+    if (mic) url += `&mic_code=${mic}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    if (data.status !== 'ok' || !data.values) throw new Error('keine Historie');
+    const points = data.values
+      .map(v => ({ t: Math.floor(new Date(v.datetime).getTime() / 1000), c: parseFloat(v.close) }))
+      .reverse();
+    if (points.length < 2) throw new Error('zu wenig Historie');
+    return points;
+  }
+
+  function closestClose(points, targetTs) {
+    let best = points[0], bestDiff = Math.abs(points[0].t - targetTs);
+    for (const pt of points) {
+      const diff = Math.abs(pt.t - targetTs);
+      if (diff < bestDiff) { bestDiff = diff; best = pt; }
+    }
+    return best.c;
+  }
+
+  function computePeriodReturns(points) {
+    const latest = points[points.length - 1].c;
+    const now = Math.floor(Date.now() / 1000);
+    const startOfYear = Math.floor(new Date(new Date().getFullYear(), 0, 1).getTime() / 1000);
+    const refs = {
+      tag: points.length >= 2 ? points[points.length - 2].c : null,
+      woche: closestClose(points, now - 7 * 86400),
+      monat: closestClose(points, now - 30 * 86400),
+      ytd: closestClose(points, startOfYear),
+      j1: closestClose(points, now - 365 * 86400),
+      j5: closestClose(points, now - 5 * 365 * 86400),
+    };
+    const out = {};
+    for (const [k, v] of Object.entries(refs)) out[k] = v ? ((latest - v) / v) * 100 : null;
+    return out;
+  }
+
+  async function updateLivePrices() {
+    const withTicker = depotPositions.filter(p => p.ticker);
+    const results = await Promise.allSettled(withTicker.map(p => fetchLivePrice(p.ticker)));
+    let successCount = 0;
+    results.forEach((r, i) => {
+      const p = withTicker[i];
+      if (r.status === 'fulfilled') {
+        p.kurs = r.value;
+        p.wert = r.value * p.stueck;
+        p.live = true;
+        successCount++;
+      }
+    });
+    const metaEl = document.getElementById('depot-meta');
+    if (successCount > 0) {
+      const time = new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+      metaEl.textContent = `Live (${successCount}/${withTicker.length}) · ${time} Uhr · Rest manuell`;
+    } else {
+      metaEl.textContent = 'Finanzfluss · manuell gepflegt (Live-Abruf nicht verfügbar)';
+    }
+    renderDepot();
+  }
+  updateLivePrices();
+
+  // ---------- Performance-Übersicht: echte Depot-Historie berechnen (aggregiert aus den 5 Live-Tickern) ----------
+  // Die 3 Fonds ohne Ticker (BIT, AGIF, DWS) fließen nur mit ihrem aktuellen Wert konstant ein,
+  // da sie keine abrufbare Kurshistorie haben — die Zeitraum-Werte sind daher eine Annäherung.
+  const perfLabels = { tag: "Tag", woche: "Woche", monat: "Monat", ytd: "YTD", j1: "1 Jahr", j5: "5 Jahre", max: "Max" };
+  const perfEl = document.getElementById('perf-overview');
+
+  function renderPerfOverview(periods, history) {
+    perfEl.innerHTML = '';
+    if (history && history.length > 1) {
+      const chartWrap = document.createElement('div');
+      chartWrap.innerHTML = sparkline(history);
+      chartWrap.style.gridColumn = '1 / -1';
+      chartWrap.style.marginBottom = '8px';
+      perfEl.appendChild(chartWrap);
+    }
+    Object.entries(perfLabels).forEach(([key, label]) => {
+      const val = periods ? periods[key] : null;
+      const item = document.createElement('div');
+      item.className = 'perf-item';
+      if (val === null || val === undefined) {
+        item.innerHTML = `<div class="label">${label}</div><div class="value">—</div>`;
+      } else {
+        const cls = val >= 0 ? 'up' : 'down';
+        item.innerHTML = `<div class="label">${label}</div><div class="value ${cls}">${val >= 0 ? '+' : ''}${val.toFixed(1)}%</div>`;
+      }
+      perfEl.appendChild(item);
+    });
+  }
+  renderPerfOverview(depotPerformance, null);
+
+  async function loadAggregateHistory() {
+    const tickered = depotPositions.filter(p => p.ticker);
+    const results = await Promise.allSettled(tickered.map(p => fetchHistory(p.ticker)));
+    const valid = [];
+    results.forEach((r, i) => { if (r.status === 'fulfilled') valid.push({ p: tickered[i], points: r.value }); });
+    if (valid.length === 0) return;
+
+    const minLen = Math.min(...valid.map(v => v.points.length));
+    const staticSum = depotPositions.filter(p => !p.ticker).reduce((s, p) => s + p.wert, 0);
+    const combined = [];
+    for (let i = 0; i < minLen; i++) {
+      let sum = staticSum;
+      let ts = null;
+      valid.forEach(v => {
+        const idx = v.points.length - minLen + i;
+        sum += v.points[idx].c * v.p.stueck;
+        ts = v.points[idx].t;
+      });
+      combined.push({ t: ts, c: sum });
+    }
+    const periods = computePeriodReturns(combined);
+    periods.max = ((depotPositions.reduce((s, p) => s + p.wert, 0) - depotPositions.reduce((s, p) => s + p.einstieg, 0)) / depotPositions.reduce((s, p) => s + p.einstieg, 0)) * 100;
+    renderPerfOverview(periods, combined);
+  }
+  loadAggregateHistory();
+
+  // ---------- Geplante Positionen rendern ----------
+  const plannedRowsEl = document.getElementById('planned-rows');
+  let plannedTotal = 0;
+  const plannedSum = plannedPositions.reduce((s, p) => s + p.betrag, 0);
+
+  function renderPlanned() {
+    plannedRowsEl.innerHTML = '';
+    plannedPositions.forEach(p => {
+      const anteil = ((p.betrag / plannedSum) * 100).toFixed(0);
+      const row = document.createElement('div');
+      row.className = 'planned-row';
+      row.innerHTML = `
+        <div class="name">${p.name}${p.kursAktuell ? ` <span class="isin">Kurs: ${eur(p.kursAktuell)}</span>` : ''}</div>
+        <div class="num tag-col">${anteil}%</div>
+        <div class="num">${eur(p.betrag)}</div>
+        <div><span class="tag">geplant</span></div>
+      `;
+      plannedRowsEl.appendChild(row);
+    });
+  }
+  renderPlanned();
+
+  plannedTotal = plannedSum;
+  plannedTotalCache = plannedTotal;
+  document.getElementById('planned-total').textContent = eur(plannedTotal);
+  document.getElementById('grand-total').textContent = eur(depotPositions.reduce((s, p) => s + p.wert, 0) + plannedTotal);
+
+  Promise.allSettled(plannedPositions.map(p => fetchLivePrice(p.ticker))).then(results => {
+    results.forEach((r, i) => {
+      if (r.status === 'fulfilled') plannedPositions[i].kursAktuell = r.value;
+    });
+    renderPlanned();
+  });
+
+  // ---------- Prioritäten: Fortschritt + lokal merken ----------
+  const taskBoxes = document.querySelectorAll('#task-list input[type="checkbox"]');
+  function refreshTaskMeta() {
+    const done = [...taskBoxes].filter(b => b.checked).length;
+    document.getElementById('task-meta').textContent = `${done}/${taskBoxes.length} erledigt`;
+  }
+  taskBoxes.forEach(box => {
+    const saved = localStorage.getItem('task-' + box.id);
+    if (saved === 'true') box.checked = true;
+    box.addEventListener('change', () => {
+      localStorage.setItem('task-' + box.id, box.checked);
+      refreshTaskMeta();
+    });
+  });
+  refreshTaskMeta();
+
+  // ---------- Notizen: lokal speichern ----------
+  const notesEl = document.getElementById('notes');
+  const notesState = document.getElementById('notes-state');
+  notesEl.value = localStorage.getItem('dashboard-notes') || '';
+  let notesTimer;
+  notesEl.addEventListener('input', () => {
+    clearTimeout(notesTimer);
+    notesState.textContent = '';
+    notesTimer = setTimeout(() => {
+      localStorage.setItem('dashboard-notes', notesEl.value);
+      notesState.textContent = 'Gespeichert.';
+    }, 500);
+  });
+
+  // ---------- Einnahmen & Investition: lokal speichern ----------
+  function loadIncome() {
+    return JSON.parse(localStorage.getItem('income-log') || '[]');
+  }
+  function saveIncome(list) {
+    localStorage.setItem('income-log', JSON.stringify(list));
+  }
+  function renderIncome() {
+    const list = loadIncome();
+    const el = document.getElementById('income-list');
+    el.innerHTML = '';
+    if (list.length === 0) {
+      el.innerHTML = '<tr class="income-empty"><td colspan="3">Noch keine Einträge.</td></tr>';
+    } else {
+      list.forEach((entry, i) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${entry.date}</td>
+          <td>${entry.amount} €</td>
+          <td><button class="del" onclick="removeIncome(${i})">entfernen</button></td>
+        `;
+        el.appendChild(row);
+      });
+    }
+    const total = list.reduce((s, e) => s + (parseFloat(String(e.amount).replace(',', '.')) || 0), 0);
+    document.getElementById('income-total-cell').textContent = eur(total);
+  }
+  function addIncome() {
+    const date = document.getElementById('income-date').value.trim();
+    const amount = document.getElementById('income-amount').value.trim();
+    if (!amount) return;
+    const list = loadIncome();
+    list.push({ date: date || '—', amount });
+    saveIncome(list);
+    document.getElementById('income-date').value = '';
+    document.getElementById('income-amount').value = '';
+    renderIncome();
+  }
+  function removeIncome(i) {
+    const list = loadIncome();
+    list.splice(i, 1);
+    saveIncome(list);
+    renderIncome();
+  }
+  renderIncome();
+</script>
+
+</body>
+</html>
