@@ -1181,6 +1181,18 @@
     refreshAllDepotViews();
   }
 
+  function addAmountToPosition(i) {
+    const p = depotPositions[i];
+    const amountStr = prompt(`Wie viel € möchtest du zu "${p.name}" hinzufügen? (z.B. 50)`, "50");
+    if (amountStr === null) return;
+    const amount = parseFloat(String(amountStr).replace(',', '.'));
+    if (!amount || isNaN(amount)) return;
+    p.einstieg += amount;
+    p.wert += amount;
+    if (p.stueck != null && p.kurs) p.stueck += amount / p.kurs;
+    refreshAllDepotViews();
+  }
+
   function removeDepotPositionAt(i) {
     if (!confirm(`"${depotPositions[i].name}" wirklich aus dem Depot entfernen?`)) return;
     depotPositions.splice(i, 1);
@@ -1210,6 +1222,7 @@
   function expandPanelHTML(p, i) {
     const actions = `
       <div class="expand-actions">
+        <button class="edit-btn" onclick="addAmountToPosition(${i})">+ Betrag</button>
         <button class="edit-btn" onclick="editDepotPosition(${i})">Bearbeiten</button>
         <button class="del-btn" onclick="removeDepotPositionAt(${i})">Entfernen</button>
       </div>
@@ -1253,7 +1266,7 @@
   // Kostenlosen API-Key holen: https://twelvedata.com/register (kein Kreditkarte nötig)
   // und hier eintragen. Ohne gültigen Key bleiben die manuell eingetragenen Werte stehen —
   // kein Fehler sichtbar, einfach die gewohnte Rückfalllösung.
-  const TWELVE_DATA_KEY = "506c3d92fdb94855b61173b093a58841";
+  const TWELVE_DATA_KEY = "4a97c869499940c4b74f8a66973ee789";
 
   function toTwelveDataSymbol(ticker) {
     if (ticker.endsWith('.DE')) {
