@@ -57,23 +57,50 @@
     letter-spacing: -0.01em;
   }
 
-  .masthead .date {
-    font-size: 13px;
-    color: var(--ink-soft);
+  .date-wrap {
     text-align: right;
     white-space: nowrap;
   }
 
-  .back-link {
-    display: inline-block;
-    margin-bottom: 28px;
-    font-size: 14px;
-    color: var(--ink-soft);
-    text-decoration: none;
-    border-bottom: 1px solid var(--rule);
-    padding-bottom: 1px;
+  .clock {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 26px;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
   }
-  .back-link:hover { color: var(--ink); border-color: var(--ink-soft); }
+
+  .masthead .date {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-top: 2px;
+  }
+
+  .weather {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-top: 2px;
+  }
+
+  .ticker-bar {
+    overflow: hidden;
+    white-space: nowrap;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 8px 0;
+    margin-top: 18px;
+  }
+  .ticker-content {
+    display: inline-block;
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+    padding-left: 100%;
+    animation: ticker-scroll 30s linear infinite;
+  }
+  @keyframes ticker-scroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+  }
 
   .grid-wrap {
     display: grid;
@@ -172,6 +199,7 @@
   }
   .row .name { font-size: 15px; }
   .row .name .isin { display:block; font-size: 11px; color: var(--ink-soft); margin-top: 2px; }
+  .row .name .day-change { display:block; font-size: 12px; margin-top: 2px; font-variant-numeric: tabular-nums; }
   .row .num { text-align: right; font-variant-numeric: tabular-nums; font-size: 15px; }
   .row.clickable { cursor: pointer; }
   .row.clickable:hover { background: var(--paper-raised); }
@@ -206,6 +234,46 @@
   .totals .label { font-size: 14px; color: var(--ink-soft); }
   .totals .value { font-family: 'Fraunces', Georgia, serif; font-size: 26px; }
   .totals .sub { font-size: 13px; margin-top: 2px; }
+
+  .depot-today {
+    padding-top: 16px;
+    margin-top: 16px;
+    border-top: 1px solid var(--rule);
+    font-size: 15px;
+  }
+
+  .add-position-btn {
+    margin-top: 16px;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 13px;
+    padding: 8px 14px;
+    background: none;
+    border: 1px solid var(--ink-soft);
+    color: var(--ink-soft);
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  .add-position-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .expand-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--rule);
+  }
+  .expand-actions button {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+    background: none;
+  }
+  .edit-btn { border: 1px solid var(--ink-soft); color: var(--ink-soft); }
+  .edit-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .del-btn { border: 1px solid var(--down); color: var(--down); }
+  .del-btn:hover { background: var(--down); color: var(--paper); }
 
   .perf-overview {
     display: grid;
@@ -336,6 +404,79 @@
   .briefing-item .headline { font-size: 15px; line-height: 1.4; }
   .briefing-item .src { font-size: 12px; color: var(--ink-soft); margin-top: 4px; }
 
+  /* Vergleich & Suche */
+  .compare-controls {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 20px;
+    margin-bottom: 16px;
+  }
+  .compare-field label {
+    display: block;
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+  }
+  .compare-field select, .compare-search-row input {
+    width: 100%;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 14px;
+    padding: 10px 12px;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    background: var(--paper-raised);
+    color: var(--ink);
+  }
+  .compare-search-row { display: flex; gap: 8px; }
+  .compare-search-row input { flex: 1; }
+  .compare-search-row button, .compare-run-btn {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 14px;
+    padding: 10px 16px;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .compare-search-row button:hover, .compare-run-btn:hover { background: var(--accent-dark); }
+  .compare-run-btn { margin-top: 14px; }
+  .search-result {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--rule);
+    cursor: pointer;
+  }
+  .search-result:hover { background: var(--paper); }
+  .search-result .isin { font-size: 11px; color: var(--ink-soft); }
+  .search-result-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    cursor: default;
+  }
+  .search-result-row:hover { background: none; }
+  .add-btn {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 12px;
+    padding: 6px 12px;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    background: none;
+    border-radius: 3px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .add-btn:hover { background: var(--accent); color: var(--paper-raised); }
+  .compare-selected { font-size: 13px; color: var(--ink-soft); margin-top: 10px; }
+  .compare-chart { margin-top: 20px; }
+  .compare-legend { display: flex; gap: 20px; margin-top: 10px; font-size: 13px; }
+  .compare-legend .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+  @media (max-width: 700px) {
+    .compare-controls { grid-template-columns: 1fr; }
+  }
+
   /* Notes */
   textarea {
     width: 100%;
@@ -446,11 +587,17 @@
 </head>
 <body>
 
-  <a class="back-link" href="https://jakob44444.github.io/Jakob-Dashboard/">← Zum Hauptdashboard</a>
-
   <div class="masthead">
     <h1>Lukas Investments</h1>
-    <div class="date" id="today"></div>
+    <div class="date-wrap">
+      <div class="clock" id="clock"></div>
+      <div class="date" id="today"></div>
+      <div class="weather" id="weather"></div>
+    </div>
+  </div>
+
+  <div class="ticker-bar">
+    <div class="ticker-content" id="ticker-content">Lädt Wetterdaten…</div>
   </div>
 
   <div class="grid-wrap">
@@ -477,16 +624,18 @@
     </div>
   </section>
 
-  <!-- ================= AKTIEN-WATCHLIST ================= -->
+  <!-- ================= WATCHLIST ================= -->
   <section>
     <div class="section-head">
       <h2><span class="num">02</span> Watchlist</h2>
       <span class="meta" id="watchlist-meta"></span>
     </div>
-    <div id="watchlist-rows"></div>
-    <div class="add-hint">
-      Neue Position beobachten: im Script unten bei <code>watchlist</code> einen Eintrag mit Name und Ticker ergänzen.
+    <div class="compare-search-row" style="margin-bottom:14px;">
+      <input type="text" id="watchlist-search-input" placeholder="ETF oder Aktie suchen (Name/Symbol)...">
+      <button id="watchlist-search-btn">Suchen</button>
     </div>
+    <div id="watchlist-search-results"></div>
+    <div id="watchlist-rows"></div>
   </section>
 
   <!-- ================= DEPOT (AKTUELL) ================= -->
@@ -517,8 +666,8 @@
       </div>
     </div>
 
-    <div class="perf-overview" id="perf-overview"></div>
-    <div class="add-hint">Live-Kurse laufen über Twelve Data. Kostenlosen Key auf <code>twelvedata.com/register</code> holen und im Script oben bei <code>TWELVE_DATA_KEY</code> eintragen — ohne Key bleiben die manuell gepflegten Werte stehen.</div>
+    <div class="depot-today" id="depot-today"></div>
+    <button id="depot-add-btn" class="add-position-btn">+ Position hinzufügen</button>
   </section>
 
   <!-- ================= DEPOT-AUSBLICK ================= -->
@@ -543,36 +692,32 @@
     <div class="add-hint">Keine Anlageberatung, keine Kursprognose. Lädt automatisch tagesaktuelle Schlagzeilen zu deinen Themen; falls das nicht klappt, steht hier eine manuell gepflegte Einordnung.</div>
   </section>
 
-  <!-- ================= GEPLANTE POSITIONEN ================= -->
+  <!-- ================= VERGLEICH & SUCHE ================= -->
   <section class="wide">
     <div class="section-head">
-      <h2><span class="num">06</span> Geplante Positionen</h2>
-      <span class="meta">noch nicht gekauft</span>
+      <h2><span class="num">06</span> Vergleich & Suche</h2>
+      <span class="meta">Twelve Data</span>
     </div>
 
-    <div class="planned-row head">
-      <div>Position</div>
-      <div class="num tag-col">Anteil</div>
-      <div class="num">Geplant</div>
-      <div>Status</div>
-    </div>
-
-    <div id="planned-rows"></div>
-
-    <div class="totals">
-      <div>
-        <div class="label">Summe geplant</div>
-        <div class="value" id="planned-total"></div>
+    <div class="compare-controls">
+      <div class="compare-field">
+        <label for="compare-base">Eigene Position</label>
+        <select id="compare-base"></select>
       </div>
-      <div style="text-align:right;">
-        <div class="label">Depot + geplant</div>
-        <div class="value" id="grand-total"></div>
+      <div class="compare-field">
+        <label for="compare-search-input">Vergleichen mit (Name oder Symbol suchen — WKN nicht immer auffindbar)</label>
+        <div class="compare-search-row">
+          <input type="text" id="compare-search-input" placeholder="z.B. Vanguard All-World, VWCE, Siemens...">
+          <button id="compare-search-btn">Suchen</button>
+        </div>
       </div>
     </div>
 
-    <div class="add-hint">
-      Weitere Position ergänzen: im Script unten bei <code>plannedPositions</code> eine Zeile nach demselben Muster hinzufügen — Name, Betrag, Status (<code>"geplant"</code> oder <code>"im Depot"</code>). Genauso funktioniert es für <code>depotPositions</code>, wenn ein neuer ETF ins Depot kommt.
-    </div>
+    <div id="compare-search-results"></div>
+    <div id="compare-selected" class="compare-selected"></div>
+    <button id="compare-btn" class="compare-run-btn">Vergleichen</button>
+
+    <div id="compare-chart" class="compare-chart"></div>
   </section>
 
   <!-- ================= NOTIZEN ================= -->
@@ -615,15 +760,43 @@
   </footer>
 
 <script>
-  // ---------- Datum ----------
+  // ---------- Datum & Uhrzeit (läuft live mit Sekunden) ----------
   document.getElementById('today').textContent = new Date().toLocaleDateString('de-DE', {
     weekday: 'long', day: '2-digit', month: 'long', year: 'numeric'
   });
 
+  function tickClock() {
+    document.getElementById('clock').textContent = new Date().toLocaleTimeString('de-DE');
+  }
+  tickClock();
+  setInterval(tickClock, 1000);
+
+  // ---------- Wetter (Open-Meteo, kein Key nötig) — Düsseldorf-Oberkassel, PLZ 40549 ----------
+  const WEATHER_LAT = 51.2350;
+  const WEATHER_LON = 6.7590;
+  const weatherCodes = {
+    0: "Klar", 1: "Meist klar", 2: "Teilweise bewölkt", 3: "Bewölkt",
+    45: "Nebel", 48: "Nebel", 51: "Niesel", 53: "Niesel", 55: "Niesel",
+    61: "Regen", 63: "Regen", 65: "Starker Regen", 71: "Schnee", 73: "Schnee", 75: "Starker Schnee",
+    80: "Schauer", 81: "Schauer", 82: "Starke Schauer", 95: "Gewitter",
+  };
+  fetch(`https://api.open-meteo.com/v1/forecast?latitude=${WEATHER_LAT}&longitude=${WEATHER_LON}&current=temperature_2m,weather_code,wind_speed_10m`)
+    .then(res => res.json())
+    .then(data => {
+      const c = data.current;
+      const desc = weatherCodes[c.weather_code] || "";
+      document.getElementById('weather').textContent = `${Math.round(c.temperature_2m)}° · ${desc}`;
+      const tickerText = `Düsseldorf-Oberkassel · ${Math.round(c.temperature_2m)}°C · ${desc} · Wind ${Math.round(c.wind_speed_10m)} km/h`;
+      const tickerEl = document.getElementById('ticker-content');
+      if (tickerEl) tickerEl.textContent = (tickerText + '   —   ').repeat(6);
+    })
+    .catch(() => { document.getElementById('weather').textContent = ''; });
+
+
   // ---------- DEPOT (aktuell) — Stückzahl + Einstieg manuell pflegen ----------
-  // ticker = Yahoo-Finance-Symbol für Live-Kurs. null = kein handelbares Live-Symbol
+  // ticker = Symbol für Live-Kurs (Twelve Data). null = kein handelbares Live-Symbol
   // (aktiv gemanagte Fonds wie AGIF/DWS/BIT haben nur eine täglich veröffentlichte NAV, keinen Live-Kurs).
-  const depotPositions = [
+  const depotPositionsSeed = [
     { name: "iShares Core MSCI World",        isin: "IE00B4L5Y983", ticker: "EUNL.DE", stueck: 59.58, kurs: 127.49, wert: 7595.03, einstieg: 6300.09, tag: -0.07, kategorie: "Global / Breit gestreut" },
     { name: "BIT Global Technology Leaders",  isin: "DE000A2N8143", ticker: null,      stueck: 9.16,  kurs: 724.75, wert: 6638.71, einstieg: 6475.20, tag: 0.06,  kategorie: "Tech" },
     { name: "iShares Core MSCI EM IMI",       isin: "IE00BKM4GZ66", ticker: "IS3N.DE", stueck: 89.45, kurs: 47.65,  wert: 4261.74, einstieg: 3197.40, tag: 0.16,  kategorie: "Emerging Markets" },
@@ -632,14 +805,34 @@
     { name: "DWS Smart Industrial Tech.",     isin: "DE0005152482", ticker: null,      stueck: 4.05,  kurs: 279.20, wert: 1130.76, einstieg: 1134.65, tag: -0.26, kategorie: "Industrie / Tech" },
     { name: "iShares Nasdaq US Biotech.",     isin: "IE00BYXG2H39", ticker: "2B70.DE", stueck: 22.9,  kurs: 8.93,   wert: 204.47,  einstieg: 204.36,  tag: 0.06,  kategorie: "Biotech" },
     { name: "VanEck Space Innovators",        isin: "IE000YU9K6K2", ticker: "JEDI.DE", stueck: 2.92,  kurs: 68.76,  wert: 200.78,  einstieg: 201.19,  tag: -0.20, kategorie: "Raumfahrt" },
+    { name: "Vanguard FTSE All-World High Dividend Yield", isin: "IE00BK5BR626", ticker: "VGWE.DE", stueck: null, kurs: 102.14, wert: 102.14, einstieg: 102.14, tag: 0, kategorie: "Dividende" },
+    { name: "iShares Core MSCI Europe",       isin: "IE00B4K48X80", ticker: "EUNK.DE", stueck: null, kurs: 101.28, wert: 101.28, einstieg: 101.28, tag: 0, kategorie: "Europa" },
+    { name: "Microsoft",                      isin: null,           ticker: "MSFT",    stueck: null, kurs: 101.50, wert: 101.50, einstieg: 101.50, tag: 0, kategorie: "Tech (Einzelaktie)" },
+    { name: "Amazon",                         isin: null,           ticker: "AMZN",    stueck: null, kurs: 102.51, wert: 102.51, einstieg: 102.51, tag: 0, kategorie: "Tech (Einzelaktie)" },
+    { name: "Apple",                          isin: null,           ticker: "AAPL",    stueck: null, kurs: 102.26, wert: 102.26, einstieg: 102.26, tag: 0, kategorie: "Tech (Einzelaktie)" },
   ];
 
-  // ---------- WATCHLIST — ETFs/Aktien ergänzen, die du im Blick behältst (noch keine Position) ----------
-  const watchlist = [
-    { name: "iShares S&P 500 Health Care Sector", isin: "IE00B43HR379", ticker: "QDVG.DE", kategorie: "Gesundheit" },
-    { name: "Vanguard FTSE All-World High Dividend Yield", isin: "IE00BK5BR626", ticker: "VGWE.DE", kategorie: "Dividende" },
-    { name: "iShares Core MSCI Europe",          isin: "IE00B4K48X80", ticker: "EUNK.DE", kategorie: "Europa" },
-  ];
+  // Deine Änderungen (hinzufügen/bearbeiten/entfernen) werden lokal im Browser gespeichert,
+  // damit sie beim nächsten Aufruf erhalten bleiben — unabhängig vom Code oben.
+  function loadDepot() {
+    try {
+      const saved = localStorage.getItem('depot-positions-v1');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return JSON.parse(JSON.stringify(depotPositionsSeed));
+  }
+  function saveDepot() {
+    localStorage.setItem('depot-positions-v1', JSON.stringify(depotPositions));
+  }
+  let depotPositions = loadDepot();
+
+  function refreshAllDepotViews() {
+    saveDepot();
+    renderDepot();
+    renderDepotToday();
+    renderAusblick();
+    refreshCompareOptions();
+  }
 
   // ---------- BRIEFING — kurze, manuell aktualisierte Einordnung passend zum Depot ----------
   const briefing = [
@@ -648,57 +841,7 @@
     { tag: "KI", headline: "Große KI- und Chip-Unternehmen legen diese Woche Quartalszahlen vor; die Reaktion dürfte auch auf Fonds mit KI-Schwerpunkt wie deinen AGIF-Fonds ausstrahlen.", src: "Marktlage · 02.09.2026" },
   ];
 
-  // ---------- DEPOT-PERFORMANCE nach Zeitraum — Prozentwerte hier manuell eintragen ----------
-  // (aus Finanzfluss > Übersicht ablesen und hier als Zahl eintragen, z.B. tag: -0.79)
-  const depotPerformance = {
-    tag:   null,   // Tagesperformance
-    woche: null,   // Wochenperformance
-    monat: null,   // Monatsperformance
-    ytd:   null,   // Year to Date
-    j1:    null,   // 1 Jahr
-    j5:    null,   // 5 Jahre
-    max:   null,   // maximale Performance (seit Einstieg gesamt)
-  };
-
-  // ---------- GEPLANTE POSITIONEN — hier ergänzen, wenn neu geplant wird ----------
-  const plannedPositions = [
-    { name: "Apple",     ticker: "AAPL",  betrag: 150 },
-    { name: "Microsoft", ticker: "MSFT",  betrag: 150 },
-    { name: "Alphabet",  ticker: "GOOGL", betrag: 150 },
-    { name: "Amazon",    ticker: "AMZN",  betrag: 150 },
-  ];
-
   const eur = (n) => n.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
-
-  // ---------- Watchlist rendern ----------
-  function renderWatchlist() {
-    const el = document.getElementById('watchlist-rows');
-    const meta = document.getElementById('watchlist-meta');
-    if (watchlist.length === 0) {
-      el.innerHTML = '<div class="watch-empty">Noch keine Positionen auf der Watchlist.</div>';
-      meta.textContent = '';
-      return;
-    }
-    meta.textContent = `${watchlist.length} beobachtet`;
-    el.innerHTML = watchlist.map(w => `
-      <div class="watch-row">
-        <div class="name">${w.name}<span class="isin">${w.isin} · ${w.kategorie}</span></div>
-        <div class="num">${w.kurs ? eur(w.kurs) : '—'}</div>
-        <div class="num"><span class="tag">${w.live ? 'live' : 'Watchlist'}</span></div>
-      </div>
-    `).join('');
-  }
-  renderWatchlist();
-
-  Promise.allSettled(watchlist.map(w => fetchLivePrice(w.ticker))).then(results => {
-    results.forEach((r, i) => {
-      if (r.status === 'fulfilled') {
-        watchlist[i].kurs = r.value;
-        watchlist[i].live = true;
-      }
-    });
-    renderWatchlist();
-  });
 
   // ---------- Depot-Ausblick rendern ----------
   function renderAusblick() {
@@ -791,6 +934,172 @@
   }
   updateBriefingLive();
 
+  // ---------- Watchlist (localStorage-gestützt, Suche + Plus-Button) ----------
+  function loadWatchlist() {
+    try {
+      const saved = localStorage.getItem('watchlist-positions-v1');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return [];
+  }
+  function saveWatchlist() {
+    localStorage.setItem('watchlist-positions-v1', JSON.stringify(watchlist));
+  }
+  let watchlist = loadWatchlist();
+
+  function renderWatchlist() {
+    const el = document.getElementById('watchlist-rows');
+    const meta = document.getElementById('watchlist-meta');
+    if (watchlist.length === 0) {
+      el.innerHTML = '<div class="watch-empty">Noch keine Positionen — oben suchen und mit "+ Watchlist" hinzufügen.</div>';
+      meta.textContent = '';
+      return;
+    }
+    meta.textContent = `${watchlist.length} beobachtet`;
+    el.innerHTML = watchlist.map((w, i) => `
+      <div class="watch-row">
+        <div class="name">${w.name}<span class="isin">${w.symbol}</span></div>
+        <div class="num">${w.kurs ? eur(w.kurs) : '—'}</div>
+        <div class="num"><button class="del-btn" onclick="removeWatchlistAt(${i})">Entfernen</button></div>
+      </div>
+    `).join('');
+  }
+  renderWatchlist();
+
+  function removeWatchlistAt(i) {
+    watchlist.splice(i, 1);
+    saveWatchlist();
+    renderWatchlist();
+  }
+
+  if (watchlist.length > 0) {
+    Promise.allSettled(watchlist.map(w => fetchLivePrice(w.symbol))).then(results => {
+      results.forEach((r, i) => { if (r.status === 'fulfilled') watchlist[i].kurs = r.value; });
+      renderWatchlist();
+    });
+  }
+
+  document.getElementById('watchlist-search-btn').addEventListener('click', async () => {
+    const q = document.getElementById('watchlist-search-input').value.trim();
+    const el = document.getElementById('watchlist-search-results');
+    if (!q) return;
+    el.innerHTML = '<div class="watch-empty">Suche läuft…</div>';
+    try {
+      const results = await searchSymbol(q);
+      el.innerHTML = results.map(r => `
+        <div class="search-result search-result-row">
+          <div>${r.instrument_name}<span class="isin"> · ${r.symbol} · ${r.exchange || ''}</span></div>
+          <button class="add-btn" data-symbol="${r.symbol}" data-name="${r.instrument_name.replace(/"/g, '&quot;')}">+ Watchlist</button>
+        </div>
+      `).join('');
+      el.querySelectorAll('.add-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          watchlist.push({ name: btn.dataset.name, symbol: btn.dataset.symbol });
+          saveWatchlist();
+          renderWatchlist();
+          fetchLivePrice(btn.dataset.symbol).then(price => {
+            watchlist[watchlist.length - 1].kurs = price;
+            renderWatchlist();
+          }).catch(() => {});
+          el.innerHTML = '';
+          document.getElementById('watchlist-search-input').value = '';
+        });
+      });
+    } catch (e) {
+      el.innerHTML = '<div class="watch-empty">Keine Treffer oder Suche gerade nicht möglich.</div>';
+    }
+  });
+
+  // ---------- Vergleich & Suche ----------
+  async function searchSymbol(query) {
+    const url = `https://api.twelvedata.com/symbol_search?symbol=${encodeURIComponent(query)}&apikey=${TWELVE_DATA_KEY}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    if (!data.data || !data.data.length) throw new Error('keine Treffer');
+    return data.data.slice(0, 6);
+  }
+
+  let compareTarget = null;
+
+  const compareBaseEl = document.getElementById('compare-base');
+  function refreshCompareOptions() {
+    compareBaseEl.innerHTML = depotPositions
+      .filter(p => p.ticker)
+      .map(p => `<option value="${p.ticker}" data-name="${p.name}">${p.name}</option>`)
+      .join('');
+  }
+  refreshCompareOptions();
+
+  document.getElementById('compare-search-btn').addEventListener('click', async () => {
+    const q = document.getElementById('compare-search-input').value.trim();
+    const resultsEl = document.getElementById('compare-search-results');
+    if (!q) return;
+    resultsEl.innerHTML = '<div class="watch-empty">Suche läuft…</div>';
+    try {
+      const results = await searchSymbol(q);
+      resultsEl.innerHTML = results.map(r => `
+        <div class="search-result" data-symbol="${r.symbol}" data-name="${r.instrument_name}">
+          <div>${r.instrument_name}</div>
+          <div class="isin">${r.symbol} · ${r.exchange || ''}</div>
+        </div>
+      `).join('');
+      resultsEl.querySelectorAll('.search-result').forEach(el => {
+        el.addEventListener('click', () => {
+          compareTarget = { symbol: el.dataset.symbol, name: el.dataset.name };
+          document.getElementById('compare-selected').textContent = `Ausgewählt zum Vergleich: ${compareTarget.name} (${compareTarget.symbol})`;
+          resultsEl.innerHTML = '';
+        });
+      });
+    } catch (e) {
+      resultsEl.innerHTML = '<div class="watch-empty">Keine Treffer oder Suche gerade nicht möglich. Bei WKN hilft oft der Name oder das Börsenkürzel besser.</div>';
+    }
+  });
+
+  function compareChart(histA, histB, nameA, nameB) {
+    const minLen = Math.min(histA.length, histB.length);
+    const a = histA.slice(-minLen), b = histB.slice(-minLen);
+    const normA = a.map(pt => (pt.c / a[0].c - 1) * 100);
+    const normB = b.map(pt => (pt.c / b[0].c - 1) * 100);
+    const all = normA.concat(normB);
+    const min = Math.min(...all), max = Math.max(...all);
+    const w = 600, h = 160;
+    const step = minLen > 1 ? w / (minLen - 1) : w;
+    const toPath = (arr) => arr.map((v, i) => {
+      const x = i * step;
+      const y = h - ((v - min) / (max - min || 1)) * (h - 8) - 4;
+      return `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`;
+    }).join(' ');
+    const lastA = normA[normA.length - 1], lastB = normB[normB.length - 1];
+    return `
+      <svg viewBox="0 0 ${w} ${h}" style="width:100%;height:${h}px;display:block;" preserveAspectRatio="none">
+        <path d="${toPath(normA)}" fill="none" stroke="var(--accent)" stroke-width="2"/>
+        <path d="${toPath(normB)}" fill="none" stroke="var(--down)" stroke-width="2"/>
+      </svg>
+      <div class="compare-legend">
+        <span><span class="dot" style="background:var(--accent)"></span>${nameA}: ${lastA >= 0 ? '+' : ''}${lastA.toFixed(1)}%</span>
+        <span><span class="dot" style="background:var(--down)"></span>${nameB}: ${lastB >= 0 ? '+' : ''}${lastB.toFixed(1)}%</span>
+      </div>
+    `;
+  }
+
+  document.getElementById('compare-btn').addEventListener('click', async () => {
+    const baseTicker = compareBaseEl.value;
+    const baseName = compareBaseEl.selectedOptions[0]?.dataset.name || baseTicker;
+    const chartEl = document.getElementById('compare-chart');
+    if (!compareTarget) {
+      chartEl.innerHTML = '<div class="watch-empty">Bitte zuerst rechts eine Position suchen und aus der Trefferliste auswählen.</div>';
+      return;
+    }
+    chartEl.innerHTML = '<div class="watch-empty">Lade Vergleich…</div>';
+    try {
+      const [histA, histB] = await Promise.all([fetchHistory(baseTicker), fetchHistory(compareTarget.symbol)]);
+      chartEl.innerHTML = compareChart(histA, histB, baseName, compareTarget.name);
+    } catch (e) {
+      chartEl.innerHTML = '<div class="watch-empty">Vergleich gerade nicht möglich — Kurshistorie für eine der beiden Positionen nicht abrufbar.</div>';
+    }
+  });
+
   // ---------- Depot rendern (wird nach dem Live-Abruf erneut aufgerufen) ----------
   const depotRowsEl = document.getElementById('depot-rows');
   const expandedIndices = new Set();
@@ -807,7 +1116,7 @@
       const row = document.createElement('div');
       row.className = 'row clickable';
       row.innerHTML = `
-        <div class="name">${p.name}${p.live ? ' <span class="tag">live</span>' : ''}<span class="isin">${p.isin}</span></div>
+        <div class="name">${p.name}${p.live ? ' <span class="tag">live</span>' : ''}${p.isin ? `<span class="isin">${p.isin}</span>` : ''}${p.tag != null ? `<span class="day-change ${p.tag >= 0 ? 'up' : 'down'}">${p.tag >= 0 ? '+' : ''}${p.tag.toFixed(2)}% heute</span>` : ''}</div>
         <div class="num">${p.kurs ? eur(p.kurs) : "—"}</div>
         <div class="num">${eur(p.wert)}</div>
         <div class="num">${eur(p.einstieg)}</div>
@@ -819,7 +1128,7 @@
       if (expandedIndices.has(i)) {
         const panel = document.createElement('div');
         panel.className = 'expand-panel';
-        panel.innerHTML = expandPanelHTML(p);
+        panel.innerHTML = expandPanelHTML(p, i);
         depotRowsEl.appendChild(panel);
       }
     });
@@ -829,9 +1138,6 @@
     const depotPerfEl = document.getElementById('depot-perf');
     depotPerfEl.textContent = (depotPerfPct >= 0 ? '+' : '') + depotPerfPct.toFixed(1) + '%';
     depotPerfEl.className = 'value ' + (depotPerfPct >= 0 ? 'up' : 'down');
-
-    document.getElementById('planned-total') && document.getElementById('grand-total') &&
-      (document.getElementById('grand-total').textContent = eur(depotTotalWert + plannedTotalCache));
   }
 
   function toggleExpand(i) {
@@ -859,17 +1165,63 @@
     }
   }
 
+  function editDepotPosition(i) {
+    const p = depotPositions[i];
+    const name = prompt("Name:", p.name);
+    if (name === null) return;
+    const einstiegStr = prompt("Einstiegswert in €:", p.einstieg);
+    if (einstiegStr === null) return;
+    const wertStr = prompt("Aktueller Wert in €:", p.wert);
+    if (wertStr === null) return;
+    const kategorie = prompt("Kategorie/Thema:", p.kategorie || "");
+    p.name = name;
+    p.einstieg = parseFloat(String(einstiegStr).replace(',', '.')) || p.einstieg;
+    p.wert = parseFloat(String(wertStr).replace(',', '.')) || p.wert;
+    if (kategorie !== null) p.kategorie = kategorie;
+    refreshAllDepotViews();
+  }
+
+  function removeDepotPositionAt(i) {
+    if (!confirm(`"${depotPositions[i].name}" wirklich aus dem Depot entfernen?`)) return;
+    depotPositions.splice(i, 1);
+    expandedIndices.clear();
+    refreshAllDepotViews();
+  }
+
+  document.getElementById('depot-add-btn').addEventListener('click', () => {
+    const name = prompt("Name der neuen Position:");
+    if (!name) return;
+    const ticker = prompt("Symbol für Live-Kurs (optional, z.B. AAPL oder VWCE.DE — leer lassen, falls keins vorhanden):", "");
+    const einstiegStr = prompt("Einstiegswert in €:", "0");
+    if (einstiegStr === null) return;
+    const wertStr = prompt("Aktueller Wert in €:", einstiegStr);
+    const kategorie = prompt("Kategorie/Thema (z.B. Tech, Gold, Europa):", "Sonstiges");
+    const einstieg = parseFloat(String(einstiegStr).replace(',', '.')) || 0;
+    const wert = parseFloat(String(wertStr || einstiegStr).replace(',', '.')) || einstieg;
+    depotPositions.push({
+      name, isin: null, ticker: ticker || null, stueck: null,
+      kurs: wert, wert, einstieg, tag: 0, kategorie: kategorie || "Sonstiges"
+    });
+    refreshAllDepotViews();
+  });
+
   const periodLabels = { tag: "Tag", woche: "Woche", monat: "Monat", ytd: "YTD", j1: "1 Jahr", j5: "5 Jahre", max: "Max" };
 
-  function expandPanelHTML(p) {
+  function expandPanelHTML(p, i) {
+    const actions = `
+      <div class="expand-actions">
+        <button class="edit-btn" onclick="editDepotPosition(${i})">Bearbeiten</button>
+        <button class="del-btn" onclick="removeDepotPositionAt(${i})">Entfernen</button>
+      </div>
+    `;
     if (!p.ticker) {
-      return `<div class="expand-empty">Für diesen Fonds gibt es keine Live-Kurshistorie (nur eine täglich veröffentlichte NAV, kein Börsenkurs). Zeiträume kannst du hier manuell eintragen, falls gewünscht.</div>`;
+      return `<div class="expand-empty">Für diesen Fonds gibt es keine Live-Kurshistorie (nur eine täglich veröffentlichte NAV, kein Börsenkurs). Zeiträume kannst du hier manuell eintragen, falls gewünscht.</div>${actions}`;
     }
     if (p.historyLoading) {
-      return `<div class="expand-empty">Lade Kursverlauf…</div>`;
+      return `<div class="expand-empty">Lade Kursverlauf…</div>${actions}`;
     }
     if (p.historyError || !p.history) {
-      return `<div class="expand-empty">Kursverlauf gerade nicht abrufbar.</div>`;
+      return `<div class="expand-empty">Kursverlauf gerade nicht abrufbar.</div>${actions}`;
     }
     const periods = { ...p.periods, max: ((p.wert - p.einstieg) / p.einstieg) * 100 };
     const items = Object.entries(periodLabels).map(([key, label]) => {
@@ -877,7 +1229,7 @@
       const cls = v == null ? '' : (v >= 0 ? 'up' : 'down');
       return `<div class="perf-item"><div class="label">${label}</div><div class="value ${cls}">${v == null ? '—' : (v >= 0 ? '+' : '') + v.toFixed(1) + '%'}</div></div>`;
     }).join('');
-    return `${sparkline(p.history)}<div class="perf-overview">${items}</div>`;
+    return `${sparkline(p.history)}<div class="perf-overview">${items}</div>${actions}`;
   }
 
   function sparkline(points) {
@@ -911,15 +1263,20 @@
   }
 
   async function fetchLivePrice(ticker) {
+    const q = await fetchQuote(ticker);
+    return q.price;
+  }
+
+  async function fetchQuote(ticker) {
     if (!TWELVE_DATA_KEY || TWELVE_DATA_KEY === "DEIN_API_KEY_HIER") throw new Error('kein API-Key hinterlegt');
     const { symbol, mic } = toTwelveDataSymbol(ticker);
-    let url = `https://api.twelvedata.com/price?symbol=${symbol}&apikey=${TWELVE_DATA_KEY}`;
+    let url = `https://api.twelvedata.com/quote?symbol=${symbol}&apikey=${TWELVE_DATA_KEY}`;
     if (mic) url += `&mic_code=${mic}`;
     const res = await fetch(url);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
-    if (!data.price) throw new Error('kein Kurs in Antwort');
-    return parseFloat(data.price);
+    if (!data.close) throw new Error('keine Quote-Daten');
+    return { price: parseFloat(data.close), changePct: parseFloat(data.percent_change) };
   }
 
   async function fetchHistory(ticker) {
@@ -966,13 +1323,15 @@
 
   async function updateLivePrices() {
     const withTicker = depotPositions.filter(p => p.ticker);
-    const results = await Promise.allSettled(withTicker.map(p => fetchLivePrice(p.ticker)));
+    const results = await Promise.allSettled(withTicker.map(p => fetchQuote(p.ticker)));
     let successCount = 0;
     results.forEach((r, i) => {
       const p = withTicker[i];
       if (r.status === 'fulfilled') {
-        p.kurs = r.value;
-        p.wert = r.value * p.stueck;
+        if (p.stueck == null) p.stueck = p.einstieg / r.value.price; // einmalig geschätzt aus Einstiegswert
+        p.kurs = r.value.price;
+        p.wert = r.value.price * p.stueck;
+        if (!isNaN(r.value.changePct)) p.tag = r.value.changePct;
         p.live = true;
         successCount++;
       }
@@ -985,98 +1344,20 @@
       metaEl.textContent = 'Finanzfluss · manuell gepflegt (Live-Abruf nicht verfügbar)';
     }
     renderDepot();
+    renderDepotToday();
   }
   updateLivePrices();
 
-  // ---------- Performance-Übersicht: echte Depot-Historie berechnen (aggregiert aus den 5 Live-Tickern) ----------
-  // Die 3 Fonds ohne Ticker (BIT, AGIF, DWS) fließen nur mit ihrem aktuellen Wert konstant ein,
-  // da sie keine abrufbare Kurshistorie haben — die Zeitraum-Werte sind daher eine Annäherung.
-  const perfLabels = { tag: "Tag", woche: "Woche", monat: "Monat", ytd: "YTD", j1: "1 Jahr", j5: "5 Jahre", max: "Max" };
-  const perfEl = document.getElementById('perf-overview');
-
-  function renderPerfOverview(periods, history) {
-    perfEl.innerHTML = '';
-    if (history && history.length > 1) {
-      const chartWrap = document.createElement('div');
-      chartWrap.innerHTML = sparkline(history);
-      chartWrap.style.gridColumn = '1 / -1';
-      chartWrap.style.marginBottom = '8px';
-      perfEl.appendChild(chartWrap);
-    }
-    Object.entries(perfLabels).forEach(([key, label]) => {
-      const val = periods ? periods[key] : null;
-      const item = document.createElement('div');
-      item.className = 'perf-item';
-      if (val === null || val === undefined) {
-        item.innerHTML = `<div class="label">${label}</div><div class="value">—</div>`;
-      } else {
-        const cls = val >= 0 ? 'up' : 'down';
-        item.innerHTML = `<div class="label">${label}</div><div class="value ${cls}">${val >= 0 ? '+' : ''}${val.toFixed(1)}%</div>`;
-      }
-      perfEl.appendChild(item);
-    });
+  // ---------- Depot: einfache Tagesperformance unter dem Gesamtwert ----------
+  function renderDepotToday() {
+    const totalWert = depotPositions.reduce((s, p) => s + p.wert, 0);
+    const netEuro = depotPositions.reduce((s, p) => s + (p.tag != null ? (p.tag / 100) * p.wert : 0), 0);
+    const netPct = (netEuro / totalWert) * 100;
+    const cls = netPct >= 0 ? 'up' : 'down';
+    document.getElementById('depot-today').innerHTML =
+      `Heute: <span class="${cls}">${netEuro >= 0 ? '+' : ''}${eur(netEuro)} · ${netPct >= 0 ? '+' : ''}${netPct.toFixed(2)}%</span>`;
   }
-  renderPerfOverview(depotPerformance, null);
-
-  async function loadAggregateHistory() {
-    const tickered = depotPositions.filter(p => p.ticker);
-    const results = await Promise.allSettled(tickered.map(p => fetchHistory(p.ticker)));
-    const valid = [];
-    results.forEach((r, i) => { if (r.status === 'fulfilled') valid.push({ p: tickered[i], points: r.value }); });
-    if (valid.length === 0) return;
-
-    const minLen = Math.min(...valid.map(v => v.points.length));
-    const staticSum = depotPositions.filter(p => !p.ticker).reduce((s, p) => s + p.wert, 0);
-    const combined = [];
-    for (let i = 0; i < minLen; i++) {
-      let sum = staticSum;
-      let ts = null;
-      valid.forEach(v => {
-        const idx = v.points.length - minLen + i;
-        sum += v.points[idx].c * v.p.stueck;
-        ts = v.points[idx].t;
-      });
-      combined.push({ t: ts, c: sum });
-    }
-    const periods = computePeriodReturns(combined);
-    periods.max = ((depotPositions.reduce((s, p) => s + p.wert, 0) - depotPositions.reduce((s, p) => s + p.einstieg, 0)) / depotPositions.reduce((s, p) => s + p.einstieg, 0)) * 100;
-    renderPerfOverview(periods, combined);
-  }
-  loadAggregateHistory();
-
-  // ---------- Geplante Positionen rendern ----------
-  const plannedRowsEl = document.getElementById('planned-rows');
-  let plannedTotal = 0;
-  const plannedSum = plannedPositions.reduce((s, p) => s + p.betrag, 0);
-
-  function renderPlanned() {
-    plannedRowsEl.innerHTML = '';
-    plannedPositions.forEach(p => {
-      const anteil = ((p.betrag / plannedSum) * 100).toFixed(0);
-      const row = document.createElement('div');
-      row.className = 'planned-row';
-      row.innerHTML = `
-        <div class="name">${p.name}${p.kursAktuell ? ` <span class="isin">Kurs: ${eur(p.kursAktuell)}</span>` : ''}</div>
-        <div class="num tag-col">${anteil}%</div>
-        <div class="num">${eur(p.betrag)}</div>
-        <div><span class="tag">geplant</span></div>
-      `;
-      plannedRowsEl.appendChild(row);
-    });
-  }
-  renderPlanned();
-
-  plannedTotal = plannedSum;
-  plannedTotalCache = plannedTotal;
-  document.getElementById('planned-total').textContent = eur(plannedTotal);
-  document.getElementById('grand-total').textContent = eur(depotPositions.reduce((s, p) => s + p.wert, 0) + plannedTotal);
-
-  Promise.allSettled(plannedPositions.map(p => fetchLivePrice(p.ticker))).then(results => {
-    results.forEach((r, i) => {
-      if (r.status === 'fulfilled') plannedPositions[i].kursAktuell = r.value;
-    });
-    renderPlanned();
-  });
+  renderDepotToday();
 
   // ---------- Prioritäten: Fortschritt + lokal merken ----------
   const taskBoxes = document.querySelectorAll('#task-list input[type="checkbox"]');
