@@ -798,16 +798,16 @@
   // ticker = Symbol für Live-Kurs (Twelve Data). null = kein handelbares Live-Symbol
   // (aktiv gemanagte Fonds wie AGIF/DWS/BIT haben nur eine täglich veröffentlichte NAV, keinen Live-Kurs).
   const depotPositionsSeed = [
-    { name: "iShares Core MSCI World",        isin: "IE00B4L5Y983", ticker: "EUNL.DE", stueck: 59.58, kurs: 127.49, wert: 7595.03, einstieg: 6300.09, tag: -0.07, kategorie: "Global / Breit gestreut" },
-    { name: "BIT Global Technology Leaders",  isin: "DE000A2N8143", ticker: null,      stueck: 9.16,  kurs: 724.75, wert: 6638.71, einstieg: 6475.20, tag: 0.06,  kategorie: "Tech" },
-    { name: "iShares Core MSCI EM IMI",       isin: "IE00BKM4GZ66", ticker: "IS3N.DE", stueck: 89.45, kurs: 47.65,  wert: 4261.74, einstieg: 3197.40, tag: 0.16,  kategorie: "Emerging Markets" },
+    { name: "iShares Core MSCI World",        isin: "IE00B4L5Y983", ticker: "EUNL.XETRA", euLive: true, stueck: 59.58, kurs: 127.49, wert: 7595.03, einstieg: 6300.09, tag: -0.07, kategorie: "Global / Breit gestreut" },
+    { name: "BIT Global Technology Leaders",  isin: "DE000A2N8143", ticker: "ANTD.F",     euLive: true, stueck: 9.16,  kurs: 724.75, wert: 6638.71, einstieg: 6475.20, tag: 0.06,  kategorie: "Tech" },
+    { name: "iShares Core MSCI EM IMI",       isin: "IE00BKM4GZ66", ticker: "IS3N.XETRA", euLive: true, stueck: 89.45, kurs: 47.65,  wert: 4261.74, einstieg: 3197.40, tag: 0.16,  kategorie: "Emerging Markets" },
     { name: "AGIF Allianz Global AI",         isin: "LU1548497186", ticker: null,      stueck: 7,     kurs: 344.32, wert: 2410.24, einstieg: 2510.76, tag: -1.35, kategorie: "KI" },
-    { name: "Gold",                           isin: "XC0009655157", ticker: "4GLD.DE", stueck: 0.32,  kurs: null,   wert: 1230.62, einstieg: 919.06,  tag: -0.49, kategorie: "Gold / Absicherung" },
+    { name: "Gold",                           isin: "XC0009655157", ticker: "4GLD.XETRA", euLive: true, stueck: 0.32,  kurs: null,   wert: 1230.62, einstieg: 919.06,  tag: -0.49, kategorie: "Gold / Absicherung" },
     { name: "DWS Smart Industrial Tech.",     isin: "DE0005152482", ticker: null,      stueck: 4.05,  kurs: 279.20, wert: 1130.76, einstieg: 1134.65, tag: -0.26, kategorie: "Industrie / Tech" },
-    { name: "iShares Nasdaq US Biotech.",     isin: "IE00BYXG2H39", ticker: "2B70.DE", stueck: 22.9,  kurs: 8.93,   wert: 204.47,  einstieg: 204.36,  tag: 0.06,  kategorie: "Biotech" },
-    { name: "VanEck Space Innovators",        isin: "IE000YU9K6K2", ticker: "JEDI.DE", stueck: 2.92,  kurs: 68.76,  wert: 200.78,  einstieg: 201.19,  tag: -0.20, kategorie: "Raumfahrt" },
-    { name: "Vanguard FTSE All-World High Dividend Yield", isin: "IE00BK5BR626", ticker: "VGWE.DE", stueck: null, kurs: 102.14, wert: 102.14, einstieg: 102.14, tag: 0, kategorie: "Dividende" },
-    { name: "iShares Core MSCI Europe",       isin: "IE00B4K48X80", ticker: "EUNK.DE", stueck: null, kurs: 101.28, wert: 101.28, einstieg: 101.28, tag: 0, kategorie: "Europa" },
+    { name: "iShares Nasdaq US Biotech.",     isin: "IE00BYXG2H39", ticker: "2B70.XETRA", euLive: true, stueck: 22.9,  kurs: 8.93,   wert: 204.47,  einstieg: 204.36,  tag: 0.06,  kategorie: "Biotech" },
+    { name: "VanEck Space Innovators",        isin: "IE000YU9K6K2", ticker: "JEDI.XETRA", euLive: true, stueck: 2.92,  kurs: 68.76,  wert: 200.78,  einstieg: 201.19,  tag: -0.20, kategorie: "Raumfahrt" },
+    { name: "Vanguard FTSE All-World High Dividend Yield", isin: "IE00BK5BR626", ticker: "VGWE.XETRA", euLive: true, stueck: null, kurs: 102.14, wert: 102.14, einstieg: 102.14, tag: 0, kategorie: "Dividende" },
+    { name: "iShares Core MSCI Europe",       isin: "IE00B4K48X80", ticker: "EUNK.XETRA", euLive: true, stueck: null, kurs: 101.28, wert: 101.28, einstieg: 101.28, tag: 0, kategorie: "Europa" },
     { name: "Microsoft",                      isin: null,           ticker: "MSFT",    stueck: null, kurs: 101.50, wert: 101.50, einstieg: 101.50, tag: 0, kategorie: "Tech (Einzelaktie)" },
     { name: "Amazon",                         isin: null,           ticker: "AMZN",    stueck: null, kurs: 102.51, wert: 102.51, einstieg: 102.51, tag: 0, kategorie: "Tech (Einzelaktie)" },
     { name: "Apple",                          isin: null,           ticker: "AAPL",    stueck: null, kurs: 102.26, wert: 102.26, einstieg: 102.26, tag: 0, kategorie: "Tech (Einzelaktie)" },
@@ -1031,7 +1031,7 @@
   const compareBaseEl = document.getElementById('compare-base');
   function refreshCompareOptions() {
     compareBaseEl.innerHTML = depotPositions
-      .filter(p => p.ticker)
+      .filter(p => p.ticker && !p.euLive)
       .map(p => `<option value="${p.ticker}" data-name="${p.name}">${p.name}</option>`)
       .join('');
   }
@@ -1158,7 +1158,7 @@
     }
     expandedIndices.add(i);
     const p = depotPositions[i];
-    if (p.ticker && !p.ticker.endsWith('.DE') && !p.history && !p.historyError) {
+    if (p.ticker && !p.euLive && !p.history && !p.historyError) {
       p.historyLoading = true;
       renderDepot();
       fetchHistory(p.ticker).then(points => {
@@ -1240,7 +1240,7 @@
     if (!p.ticker) {
       return `<div class="expand-empty">Für diesen Fonds gibt es keine Live-Kurshistorie (nur eine täglich veröffentlichte NAV, kein Börsenkurs). Zeiträume kannst du hier manuell eintragen, falls gewünscht.</div>${actions}`;
     }
-    if (p.ticker.endsWith('.DE')) {
+    if (p.euLive) {
       const statusLine = p.live
         ? `Der aktuelle Kurs kommt live über EODHD${p.liveSource === 'eodhd-cache' ? ' (aus dem 6h-Zwischenspeicher, wegen Tageslimit)' : ''}.`
         : `Live-Kurs gerade nicht abrufbar.`;
@@ -1289,14 +1289,9 @@
   // damit nicht jeder Seitenaufruf das Tageskontingent auffrisst.
   const EODHD_API_KEY = "6a9d8064040565.77591931";
 
-  function toEodhdSymbol(ticker) {
-    return ticker.replace('.DE', '.XETRA');
-  }
-
   async function fetchEodhdQuotes(tickers) {
     if (tickers.length === 0) return {};
-    const eodTickers = tickers.map(toEodhdSymbol);
-    const [first, ...rest] = eodTickers;
+    const [first, ...rest] = tickers;
     let url = `https://eodhd.com/api/real-time/${first}?api_token=${EODHD_API_KEY}&fmt=json`;
     if (rest.length > 0) url += `&s=${rest.join(',')}`;
     const res = await fetch(url);
@@ -1305,7 +1300,7 @@
     const list = Array.isArray(data) ? data : [data];
     const map = {};
     list.forEach(q => {
-      if (q && q.code) map[q.code.replace('.XETRA', '.DE')] = q;
+      if (q && q.code) map[q.code] = q;
     });
     return map;
   }
@@ -1402,8 +1397,8 @@
 
   async function updateLivePrices() {
     // US-Positionen: Twelve Data, gebündelt in einem Request.
-    const withTicker = depotPositions.filter(p => p.ticker && !p.ticker.endsWith('.DE'));
-    const euTickerPositions = depotPositions.filter(p => p.ticker && p.ticker.endsWith('.DE'));
+    const withTicker = depotPositions.filter(p => p.ticker && !p.euLive);
+    const euTickerPositions = depotPositions.filter(p => p.ticker && p.euLive);
     let successCount = 0;
     try {
       const quotes = await fetchQuotesBatch(withTicker.map(p => p.ticker));
