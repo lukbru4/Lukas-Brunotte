@@ -663,6 +663,7 @@
       <div style="text-align:right;">
         <div class="label">Gesamt seit Einstieg</div>
         <div class="value" id="depot-perf"></div>
+        <div class="sub" id="depot-perf-euro"></div>
       </div>
     </div>
 
@@ -846,6 +847,9 @@
   // ---------- Depot-Ausblick rendern ----------
   function renderAusblick() {
     const totalWert = depotPositions.reduce((s, p) => s + p.wert, 0);
+    const totalEinstieg = depotPositions.reduce((s, p) => s + p.einstieg, 0);
+    const renditeEuro = totalWert - totalEinstieg;
+    const renditePct = (renditeEuro / totalEinstieg) * 100;
     const netEuro = depotPositions.reduce((s, p) => s + (p.tag != null ? (p.tag / 100) * p.wert : 0), 0);
     const netPct = (netEuro / totalWert) * 100;
     const up = depotPositions.filter(p => p.tag > 0).length;
@@ -856,8 +860,10 @@
     const bremse = withTag.reduce((a, b) => (b.tag < a.tag ? b : a));
 
     const netClass = netPct >= 0 ? 'up' : 'down';
+    const renditeClass = renditePct >= 0 ? 'up' : 'down';
     document.getElementById('ausblick-summary').innerHTML = `
       <div class="ausblick-net">Heute: <span class="${netClass}">${netPct >= 0 ? '+' : ''}${eur(netEuro)} · ${netPct >= 0 ? '+' : ''}${netPct.toFixed(2)}%</span> über alle ${depotPositions.length} Positionen.</div>
+      <div class="ausblick-net">Rendite gesamt: <span class="${renditeClass}">${renditePct >= 0 ? '+' : ''}${eur(renditeEuro)} · ${renditePct >= 0 ? '+' : ''}${renditePct.toFixed(2)}%</span> seit Einstieg.</div>
       <div class="ausblick-chips">
         <span class="chip">${up} im Plus</span>
         <span class="chip">${neutral} neutral</span>
@@ -1134,10 +1140,14 @@
     });
 
     document.getElementById('depot-total').textContent = eur(depotTotalWert);
-    const depotPerfPct = ((depotTotalWert - depotTotalEinstieg) / depotTotalEinstieg) * 100;
+    const depotPerfEuro = depotTotalWert - depotTotalEinstieg;
+    const depotPerfPct = (depotPerfEuro / depotTotalEinstieg) * 100;
     const depotPerfEl = document.getElementById('depot-perf');
     depotPerfEl.textContent = (depotPerfPct >= 0 ? '+' : '') + depotPerfPct.toFixed(1) + '%';
     depotPerfEl.className = 'value ' + (depotPerfPct >= 0 ? 'up' : 'down');
+    const depotPerfEuroEl = document.getElementById('depot-perf-euro');
+    depotPerfEuroEl.textContent = (depotPerfEuro >= 0 ? '+' : '') + eur(depotPerfEuro);
+    depotPerfEuroEl.className = 'sub ' + (depotPerfEuro >= 0 ? 'up' : 'down');
   }
 
   function toggleExpand(i) {
@@ -1148,7 +1158,7 @@
     }
     expandedIndices.add(i);
     const p = depotPositions[i];
-    if (p.ticker && !p.history && !p.historyError) {
+    if (p.ticker && !p.ticker.endsWith('.DE') && !p.history && !p.historyError) {
       p.historyLoading = true;
       renderDepot();
       fetchHistory(p.ticker).then(points => {
@@ -1230,6 +1240,12 @@
     if (!p.ticker) {
       return `<div class="expand-empty">Für diesen Fonds gibt es keine Live-Kurshistorie (nur eine täglich veröffentlichte NAV, kein Börsenkurs). Zeiträume kannst du hier manuell eintragen, falls gewünscht.</div>${actions}`;
     }
+    if (p.ticker.endsWith('.DE')) {
+      const statusLine = p.live
+        ? `Der aktuelle Kurs kommt live über EODHD${p.liveSource === 'eodhd-cache' ? ' (aus dem 6h-Zwischenspeicher, wegen Tageslimit)' : ''}.`
+        : `Live-Kurs gerade nicht abrufbar.`;
+      return `<div class="expand-empty">${statusLine} Einen Kursverlauf/Chart gibt's dafür bewusst nicht, um das knappe Tageslimit (20 Anfragen/Tag) zu schonen.</div>${actions}`;
+    }
     if (p.historyLoading) {
       return `<div class="expand-empty">Lade Kursverlauf…</div>${actions}`;
     }
@@ -1267,6 +1283,45 @@
   // und hier eintragen. Ohne gültigen Key bleiben die manuell eingetragenen Werte stehen —
   // kein Fehler sichtbar, einfach die gewohnte Rückfalllösung.
   const TWELVE_DATA_KEY = "4a97c869499940c4b74f8a66973ee789";
+
+  // ---------- EODHD (nur für europäische Xetra-ETFs, Gratis-Tarif: 20 Anfragen/Tag!) ----------
+  // Deshalb: EIN gebündelter Request für alle EU-Positionen zusammen, plus 6h-Cache im Browser,
+  // damit nicht jeder Seitenaufruf das Tageskontingent auffrisst.
+  const EODHD_API_KEY = "6a9d8064040565.77591931";
+
+  function toEodhdSymbol(ticker) {
+    return ticker.replace('.DE', '.XETRA');
+  }
+
+  async function fetchEodhdQuotes(tickers) {
+    if (tickers.length === 0) return {};
+    const eodTickers = tickers.map(toEodhdSymbol);
+    const [first, ...rest] = eodTickers;
+    let url = `https://eodhd.com/api/real-time/${first}?api_token=${EODHD_API_KEY}&fmt=json`;
+    if (rest.length > 0) url += `&s=${rest.join(',')}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    const list = Array.isArray(data) ? data : [data];
+    const map = {};
+    list.forEach(q => {
+      if (q && q.code) map[q.code.replace('.XETRA', '.DE')] = q;
+    });
+    return map;
+  }
+
+  function loadEodhdCache() {
+    try {
+      const raw = localStorage.getItem('eodhd-cache-v1');
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      if (Date.now() - parsed.ts > 6 * 60 * 60 * 1000) return null; // älter als 6h
+      return parsed.data;
+    } catch (e) { return null; }
+  }
+  function saveEodhdCache(data) {
+    try { localStorage.setItem('eodhd-cache-v1', JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
+  }
 
   function toTwelveDataSymbol(ticker) {
     if (ticker.endsWith('.DE')) {
@@ -1334,30 +1389,79 @@
     return out;
   }
 
+  async function fetchQuotesBatch(tickers) {
+    if (tickers.length === 0) return {};
+    const url = `https://api.twelvedata.com/quote?symbol=${tickers.join(',')}&apikey=${TWELVE_DATA_KEY}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    // Bei mehreren Symbolen liefert Twelve Data ein Objekt je Symbol, bei einem einzelnen direkt die Quote.
+    if (tickers.length === 1) return { [tickers[0]]: data };
+    return data;
+  }
+
   async function updateLivePrices() {
-    const withTicker = depotPositions.filter(p => p.ticker);
-    const results = await Promise.allSettled(withTicker.map(p => fetchQuote(p.ticker)));
+    // US-Positionen: Twelve Data, gebündelt in einem Request.
+    const withTicker = depotPositions.filter(p => p.ticker && !p.ticker.endsWith('.DE'));
+    const euTickerPositions = depotPositions.filter(p => p.ticker && p.ticker.endsWith('.DE'));
     let successCount = 0;
-    results.forEach((r, i) => {
-      const p = withTicker[i];
-      if (r.status === 'fulfilled') {
-        if (p.stueck == null) p.stueck = p.einstieg / r.value.price; // einmalig geschätzt aus Einstiegswert
-        p.kurs = r.value.price;
-        p.wert = r.value.price * p.stueck;
-        if (!isNaN(r.value.changePct)) p.tag = r.value.changePct;
-        p.live = true;
-        successCount++;
+    try {
+      const quotes = await fetchQuotesBatch(withTicker.map(p => p.ticker));
+      withTicker.forEach(p => {
+        const q = quotes[p.ticker];
+        if (q && q.close) {
+          const price = parseFloat(q.close);
+          if (p.stueck == null) p.stueck = p.einstieg / price; // einmalig geschätzt aus Einstiegswert
+          p.kurs = price;
+          p.wert = price * p.stueck;
+          const chg = parseFloat(q.percent_change);
+          if (!isNaN(chg)) p.tag = chg;
+          p.live = true;
+          successCount++;
+        }
+      });
+    } catch (e) {}
+
+    // EU-Positionen (Xetra): EODHD, mit 6h-Cache wegen 20 Anfragen/Tag-Limit.
+    let euSuccessCount = 0;
+    if (euTickerPositions.length > 0) {
+      let euQuotes = loadEodhdCache();
+      let fromCache = !!euQuotes;
+      if (!euQuotes) {
+        try {
+          euQuotes = await fetchEodhdQuotes(euTickerPositions.map(p => p.ticker));
+          saveEodhdCache(euQuotes);
+        } catch (e) { euQuotes = null; }
       }
-    });
+      if (euQuotes) {
+        euTickerPositions.forEach(p => {
+          const q = euQuotes[p.ticker];
+          if (q && q.close) {
+            const price = parseFloat(q.close);
+            if (p.stueck == null) p.stueck = p.einstieg / price;
+            p.kurs = price;
+            p.wert = price * p.stueck;
+            const chg = parseFloat(q.change_p);
+            if (!isNaN(chg)) p.tag = chg;
+            p.live = true;
+            p.liveSource = fromCache ? 'eodhd-cache' : 'eodhd';
+            euSuccessCount++;
+          }
+        });
+      }
+    }
+
     const metaEl = document.getElementById('depot-meta');
-    if (successCount > 0) {
+    const totalLive = successCount + euSuccessCount;
+    if (totalLive > 0) {
       const time = new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
-      metaEl.textContent = `Live (${successCount}/${withTicker.length}) · ${time} Uhr · Rest manuell`;
+      metaEl.textContent = `Live (${totalLive}/${withTicker.length + euTickerPositions.length}) · ${time} Uhr · Rest manuell`;
     } else {
       metaEl.textContent = 'Finanzfluss · manuell gepflegt (Live-Abruf nicht verfügbar)';
     }
     renderDepot();
     renderDepotToday();
+    renderAusblick();
   }
   updateLivePrices();
 
