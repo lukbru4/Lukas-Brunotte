@@ -1288,7 +1288,7 @@
   // ---------- EODHD (nur für europäische Xetra-ETFs, Gratis-Tarif: 20 Anfragen/Tag!) ----------
   // Deshalb: EIN gebündelter Request für alle EU-Positionen zusammen, plus 6h-Cache im Browser,
   // damit nicht jeder Seitenaufruf das Tageskontingent auffrisst.
-  const EODHD_API_KEY = "6a9d8064040565.77591931";
+  const EODHD_API_KEY = "6a9d806404040565.77591931";
 
   async function fetchEodhdQuotes(tickers) {
     if (tickers.length === 0) return {};
