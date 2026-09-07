@@ -802,15 +802,16 @@
     { name: "BIT Global Technology Leaders",  isin: "DE000A2N8143", ticker: "ANTD.F",     euLive: true, stueck: 9.16,  kurs: 724.75, wert: 6638.71, einstieg: 6475.20, tag: 0.06,  kategorie: "Tech" },
     { name: "iShares Core MSCI EM IMI",       isin: "IE00BKM4GZ66", ticker: "IS3N.XETRA", euLive: true, stueck: 89.45, kurs: 47.65,  wert: 4261.74, einstieg: 3197.40, tag: 0.16,  kategorie: "Emerging Markets" },
     { name: "AGIF Allianz Global AI",         isin: "LU1548497186", ticker: null,      stueck: 7,     kurs: 344.32, wert: 2410.24, einstieg: 2510.76, tag: -1.35, kategorie: "KI" },
-    { name: "Gold",                           isin: "XC0009655157", ticker: "4GLD.XETRA", euLive: true, stueck: 0.32,  kurs: null,   wert: 1230.62, einstieg: 919.06,  tag: -0.49, kategorie: "Gold / Absicherung" },
+    { name: "Gold",                           isin: "XC0009655157", ticker: null, stueck: 0.32,  kurs: null,   wert: 1230.62, einstieg: 919.06,  tag: -0.49, kategorie: "Gold / Absicherung" },
     { name: "DWS Smart Industrial Tech.",     isin: "DE0005152482", ticker: null,      stueck: 4.05,  kurs: 279.20, wert: 1130.76, einstieg: 1134.65, tag: -0.26, kategorie: "Industrie / Tech" },
-    { name: "iShares Nasdaq US Biotech.",     isin: "IE00BYXG2H39", ticker: "2B70.XETRA", euLive: true, stueck: 22.9,  kurs: 8.93,   wert: 204.47,  einstieg: 204.36,  tag: 0.06,  kategorie: "Biotech" },
-    { name: "VanEck Space Innovators",        isin: "IE000YU9K6K2", ticker: "JEDI.XETRA", euLive: true, stueck: 2.92,  kurs: 68.76,  wert: 200.78,  einstieg: 201.19,  tag: -0.20, kategorie: "Raumfahrt" },
-    { name: "Vanguard FTSE All-World High Dividend Yield", isin: "IE00BK5BR626", ticker: "VGWE.XETRA", euLive: true, stueck: null, kurs: 102.14, wert: 102.14, einstieg: 102.14, tag: 0, kategorie: "Dividende" },
-    { name: "iShares Core MSCI Europe",       isin: "IE00B4K48X80", ticker: "EUNK.XETRA", euLive: true, stueck: null, kurs: 101.28, wert: 101.28, einstieg: 101.28, tag: 0, kategorie: "Europa" },
+    { name: "iShares Nasdaq US Biotech.",     isin: "IE00BYXG2H39", ticker: null, stueck: 22.9,  kurs: 8.93,   wert: 204.47,  einstieg: 204.36,  tag: 0.06,  kategorie: "Biotech" },
+    { name: "VanEck Space Innovators",        isin: "IE000YU9K6K2", ticker: null, stueck: 2.92,  kurs: 68.76,  wert: 200.78,  einstieg: 201.19,  tag: -0.20, kategorie: "Raumfahrt" },
+    { name: "Vanguard FTSE All-World High Dividend Yield", isin: "IE00BK5BR626", ticker: null, stueck: null, kurs: 102.14, wert: 102.14, einstieg: 102.14, tag: 0, kategorie: "Dividende" },
+    { name: "iShares Core MSCI Europe",       isin: "IE00B4K48X80", ticker: null, stueck: null, kurs: 101.28, wert: 101.28, einstieg: 101.28, tag: 0, kategorie: "Europa" },
     { name: "Microsoft",                      isin: null,           ticker: "MSFT",    stueck: null, kurs: 101.50, wert: 101.50, einstieg: 101.50, tag: 0, kategorie: "Tech (Einzelaktie)" },
     { name: "Amazon",                         isin: null,           ticker: "AMZN",    stueck: null, kurs: 102.51, wert: 102.51, einstieg: 102.51, tag: 0, kategorie: "Tech (Einzelaktie)" },
     { name: "Apple",                          isin: null,           ticker: "AAPL",    stueck: null, kurs: 102.26, wert: 102.26, einstieg: 102.26, tag: 0, kategorie: "Tech (Einzelaktie)" },
+    { name: "Alphabet A",                     isin: null,           ticker: "GOOGL",   stueck: null, kurs: 100,    wert: 100,    einstieg: 100,    tag: 0, kategorie: "Tech (Einzelaktie)" },
   ];
 
   // Deine Änderungen (hinzufügen/bearbeiten/entfernen) werden lokal im Browser gespeichert,
@@ -1406,7 +1407,7 @@
         const q = quotes[p.ticker];
         if (q && q.close) {
           const price = parseFloat(q.close);
-          if (p.stueck == null) p.stueck = p.einstieg / price; // einmalig geschätzt aus Einstiegswert
+          if (p.stueck == null) p.stueck = p.wert / price; // einmalig geschätzt aus aktuellem Wert
           p.kurs = price;
           p.wert = price * p.stueck;
           const chg = parseFloat(q.percent_change);
@@ -1433,7 +1434,7 @@
           const q = euQuotes[p.ticker];
           if (q && q.close) {
             const price = parseFloat(q.close);
-            if (p.stueck == null) p.stueck = p.einstieg / price;
+            if (p.stueck == null) p.stueck = p.wert / price;
             p.kurs = price;
             p.wert = price * p.stueck;
             const chg = parseFloat(q.change_p);
