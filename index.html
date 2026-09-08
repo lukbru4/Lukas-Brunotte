@@ -758,7 +758,7 @@
 
   <footer>
     Keine Anlageberatung, keine Kursprognose. Werte manuell im Code gepflegt — Notizen und Einnahmen-Einträge werden lokal im Browser gespeichert (nur auf diesem Gerät, solange die Seite unter derselben Adresse läuft).
-    <br><strong>Build: 2026-09-08 · v11 (Speicher-Reset: alte lokale Daten werden verworfen)</strong>
+    <br><strong>Build: 2026-09-08 · v12 (Depot-Werte aktualisiert, Stand 08.09.)</strong>
   </footer>
 
 <script>
@@ -799,33 +799,33 @@
   // ticker = Symbol für Live-Kurs (Twelve Data). null = kein handelbares Live-Symbol
   // (aktiv gemanagte Fonds wie AGIF/DWS/BIT haben nur eine täglich veröffentlichte NAV, keinen Live-Kurs).
   const depotPositionsSeed = [
-    { name: "iShares Core MSCI World",        isin: "IE00B4L5Y983", ticker: "EUNL.XETRA", euLive: true, stueck: 59.58, kurs: 127.49, wert: 7595.03, einstieg: 6300.09, tag: -0.07, kategorie: "Global / Breit gestreut" },
-    { name: "BIT Global Technology Leaders",  isin: "DE000A2N8143", ticker: "ANTD.F",     euLive: true, stueck: 9.16,  kurs: 724.75, wert: 6638.71, einstieg: 6475.20, tag: 0.06,  kategorie: "Tech" },
-    { name: "iShares Core MSCI EM IMI",       isin: "IE00BKM4GZ66", ticker: "IS3N.XETRA", euLive: true, stueck: 89.45, kurs: 47.65,  wert: 4261.74, einstieg: 3197.40, tag: 0.16,  kategorie: "Emerging Markets" },
-    { name: "AGIF Allianz Global AI",         isin: "LU1548497186", ticker: null,      stueck: 7,     kurs: 344.32, wert: 2410.24, einstieg: 2510.76, tag: -1.35, kategorie: "KI" },
+    { name: "iShares Core MSCI World",        isin: "IE00B4L5Y983", ticker: "EUNL.XETRA", euLive: true, stueck: 59.58, kurs: 126.89, wert: 7559.82, einstieg: 6300.09, tag: -0.41, kategorie: "Global / Breit gestreut" },
+    { name: "BIT Global Internet Leaders 30", isin: "DE000A2N8143", ticker: "ANTD.F",     euLive: true, stueck: 9.1595, kurs: 740.36, wert: 6781.34, einstieg: 6475.20, tag: -0.09, kategorie: "Tech" },
+    { name: "iShares Core MSCI EM IMI",       isin: "IE00BKM4GZ66", ticker: "IS3N.XETRA", euLive: true, stueck: 89.44, kurs: 48.48,  wert: 4335.94, einstieg: 3197.40, tag: 0.12,  kategorie: "Emerging Markets" },
+    { name: "AGIF Allianz Global AI",         isin: "LU1548497186", ticker: null,      stueck: 7,      kurs: 348.33, wert: 2438.31, einstieg: 2510.76, tag: 0.26,  kategorie: "KI" },
     { name: "Gold",                           isin: "XC0009655157", ticker: null, stueck: 0.32,  kurs: null,   wert: 1230.62, einstieg: 919.06,  tag: -0.49, kategorie: "Gold / Absicherung" },
-    { name: "DWS Smart Industrial Tech.",     isin: "DE0005152482", ticker: null,      stueck: 4.05,  kurs: 279.20, wert: 1130.76, einstieg: 1134.65, tag: -0.26, kategorie: "Industrie / Tech" },
-    { name: "iShares Nasdaq US Biotech.",     isin: "IE00BYXG2H39", ticker: null, stueck: 22.9,  kurs: 8.93,   wert: 204.47,  einstieg: 204.36,  tag: 0.06,  kategorie: "Biotech" },
-    { name: "VanEck Space Innovators",        isin: "IE000YU9K6K2", ticker: null, stueck: 2.92,  kurs: 68.76,  wert: 200.78,  einstieg: 201.19,  tag: -0.20, kategorie: "Raumfahrt" },
-    { name: "Vanguard FTSE All-World High Dividend Yield", isin: "IE00BK5BR626", ticker: null, stueck: null, kurs: 102.14, wert: 102.14, einstieg: 102.14, tag: 0, kategorie: "Dividende" },
-    { name: "iShares Core MSCI Europe",       isin: "IE00B4K48X80", ticker: null, stueck: null, kurs: 101.28, wert: 101.28, einstieg: 101.28, tag: 0, kategorie: "Europa" },
-    { name: "Microsoft",                      isin: null,           ticker: "MSFT",    stueck: null, kurs: 101.50, wert: 101.50, einstieg: 101.50, tag: 0, kategorie: "Tech (Einzelaktie)" },
-    { name: "Amazon",                         isin: null,           ticker: "AMZN",    stueck: null, kurs: 102.51, wert: 102.51, einstieg: 102.51, tag: 0, kategorie: "Tech (Einzelaktie)" },
-    { name: "Apple",                          isin: null,           ticker: "AAPL",    stueck: null, kurs: 102.26, wert: 102.26, einstieg: 102.26, tag: 0, kategorie: "Tech (Einzelaktie)" },
-    { name: "Alphabet A",                     isin: null,           ticker: "GOOGL",   stueck: null, kurs: 100,    wert: 100,    einstieg: 100,    tag: 0, kategorie: "Tech (Einzelaktie)" },
+    { name: "DWS Smart Industrial Tech.",     isin: "DE0005152482", ticker: null,      stueck: 4.05,  kurs: 276.73, wert: 1120.76, einstieg: 1134.65, tag: -0.35, kategorie: "Industrie / Tech" },
+    { name: "iShares Nasdaq US Biotech.",     isin: "IE00BYXG2H39", ticker: null, stueck: 22.03, kurs: 8.87,   wert: 195.37,  einstieg: 204.36,  tag: -1.22, kategorie: "Biotech" },
+    { name: "VanEck Space Innovators",        isin: "IE000YU9K6K2", ticker: null, stueck: 2.67,  kurs: 70.53,  wert: 188.32,  einstieg: 201.19,  tag: 2.22,  kategorie: "Raumfahrt" },
+    { name: "Vanguard FTSE All-World High Dividend Yield", isin: "IE00BK5BR626", ticker: null, stueck: 1.08, kurs: 93.93, wert: 101.44, einstieg: 102.14, tag: -0.16, kategorie: "Dividende" },
+    { name: "iShares Core MSCI Europe",       isin: "IE00B4K48X80", ticker: null, stueck: 0.96, kurs: 104.94, wert: 100.74, einstieg: 101.28, tag: -0.64, kategorie: "Europa" },
+    { name: "Microsoft",                      isin: "US5949181045", ticker: "MSFT",    stueck: 0.23, kurs: 424.38, wert: 97.61, einstieg: 101.50, tag: -0.93, kategorie: "Tech (Einzelaktie)" },
+    { name: "Amazon",                         isin: "US0231351067", ticker: "AMZN",    stueck: 0.46, kurs: 220.98, wert: 101.65, einstieg: 102.51, tag: -0.37, kategorie: "Tech (Einzelaktie)" },
+    { name: "Apple",                          isin: "US0378331005", ticker: "AAPL",    stueck: 0.36, kurs: 272.05, wert: 97.94, einstieg: 102.26, tag: -1.00, kategorie: "Tech (Einzelaktie)" },
+    { name: "Alphabet A",                     isin: "US02079K3059", ticker: "GOOGL",   stueck: 0.3439, kurs: 290.88, wert: 100.03, einstieg: 100,    tag: -0.35, kategorie: "Tech (Einzelaktie)" },
   ];
 
   // Deine Änderungen (hinzufügen/bearbeiten/entfernen) werden lokal im Browser gespeichert,
   // damit sie beim nächsten Aufruf erhalten bleiben — unabhängig vom Code oben.
   function loadDepot() {
     try {
-      const saved = localStorage.getItem('depot-positions-v2');
+      const saved = localStorage.getItem('depot-positions-v3');
       if (saved) return JSON.parse(saved);
     } catch (e) {}
     return JSON.parse(JSON.stringify(depotPositionsSeed));
   }
   function saveDepot() {
-    localStorage.setItem('depot-positions-v2', JSON.stringify(depotPositions));
+    localStorage.setItem('depot-positions-v3', JSON.stringify(depotPositions));
   }
   let depotPositions = loadDepot();
 
