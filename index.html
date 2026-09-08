@@ -758,7 +758,7 @@
 
   <footer>
     Keine Anlageberatung, keine Kursprognose. Werte manuell im Code gepflegt — Notizen und Einnahmen-Einträge werden lokal im Browser gespeichert (nur auf diesem Gerät, solange die Seite unter derselben Adresse läuft).
-    <br><strong>Build: 2026-09-07 · v9 (EODHD nur MSCI World/EM IMI/BIT Global Tech)</strong>
+    <br><strong>Build: 2026-09-08 · v10 (kleinere Chart-Abrufe gegen Twelve-Data-Limit)</strong>
   </footer>
 
 <script>
@@ -1347,7 +1347,7 @@
   async function fetchHistory(ticker) {
     if (!TWELVE_DATA_KEY || TWELVE_DATA_KEY === "DEIN_API_KEY_HIER") throw new Error('kein API-Key hinterlegt');
     const { symbol, mic } = toTwelveDataSymbol(ticker);
-    let url = `https://api.twelvedata.com/time_series?symbol=${symbol}&interval=1day&outputsize=1300&apikey=${TWELVE_DATA_KEY}`;
+    let url = `https://api.twelvedata.com/time_series?symbol=${symbol}&interval=1day&outputsize=400&apikey=${TWELVE_DATA_KEY}`;
     if (mic) url += `&mic_code=${mic}`;
     const res = await fetch(url);
     if (!res.ok) throw new Error('HTTP ' + res.status);
