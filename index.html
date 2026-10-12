@@ -1464,5 +1464,35 @@
   renderIncome();
 </script>
 
+<!-- Smooth Scroll (Lenis) + Animationen (GSAP / ScrollTrigger) -->
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+  (function () {
+    // Ohne Bibliotheken oder bei "Bewegung reduzieren" bleibt die Seite wie bisher.
+    if (!window.gsap || !window.ScrollTrigger || !window.Lenis) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Weiches Scrollen, mit ScrollTrigger synchronisiert
+    const lenis = new Lenis({ lerp: 0.1 });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(t => lenis.raf(t * 1000));
+    gsap.ticker.lagSmoothing(0);
+
+    // Kopfbereich: sanftes Einblenden beim Laden
+    gsap.from('.masthead > *', { y: -16, opacity: 0, duration: 0.8, stagger: 0.12, ease: 'power3.out' });
+
+    // Abschnitte: beim Hineinscrollen von unten einblenden
+    gsap.utils.toArray('.grid-wrap > section').forEach(el => {
+      gsap.from(el, {
+        y: 36, opacity: 0, duration: 0.8, ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 88%', once: true }
+      });
+    });
+  })();
+</script>
 </body>
 </html>
