@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Outfit-Planer</title>
+<style>
+  :root{--olive:#566029;--olive-d:#3f4720;--olive-l:#eef0e0;--brown:#8b5a32;--brown-l:#f3e9de;--ink:#2a2a20;--muted:#6f6c5c;--line:#e3dfd0}
+  *{box-sizing:border-box}
+  body{margin:0;background:#fff;color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.45}
+  .wrap{max-width:900px;margin:0 auto;padding:0 16px 60px}
+  header{padding:30px 0 16px;border-bottom:3px solid var(--olive);margin-bottom:20px}
+  h1,h2,h3{font-family:Georgia,"Times New Roman",serif;margin:0}
+  h1{font-size:clamp(28px,6vw,38px);color:var(--olive-d)} h1 span{color:var(--brown)}
+  header p{margin:6px 0 0;color:var(--muted)}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+  .tabs button{font:inherit;padding:10px 18px;border-radius:999px;border:1px solid var(--olive);background:#fff;color:var(--olive-d);cursor:pointer}
+  .tabs button.on{background:var(--olive);color:#fff}
+  .lead{background:var(--olive-l);border-left:4px solid var(--olive);padding:12px 16px;border-radius:0 12px 12px 0;margin-bottom:22px}
+  .lead b{color:var(--olive-d)}
+  .pal{display:flex;gap:6px;margin-top:8px}.pal i{width:22px;height:22px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px var(--line)}
+  h2{font-size:21px;color:var(--olive-d);margin:26px 0 12px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+  .piece{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#fff}
+  .art{position:relative;background:linear-gradient(#faf8f1,#f1ede0);padding:14px}
+  .art svg{width:100%;height:170px;display:block}
+  .num{position:absolute;left:12px;top:12px;width:30px;height:30px;border-radius:50%;background:var(--brown);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center}
+  .body{padding:12px 14px 14px}
+  .cat{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--brown);font-weight:700}
+  .nm{font-family:Georgia,serif;font-size:18px;margin:2px 0 6px}
+  .col{display:flex;align-items:center;gap:8px;font-size:14px;margin-bottom:8px}
+  .col i{width:18px;height:18px;border-radius:50%;box-shadow:0 0 0 1px var(--line)}
+  .spec{margin:0;padding-left:18px;font-size:14px;color:#4a4a3c}
+  .spec li{margin-bottom:2px}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:640px){.two{grid-template-columns:1fr}}
+  .box{border:1px solid var(--line);border-radius:16px;padding:16px}
+  .box.brown{background:var(--brown-l);border-color:#e6d3bf}
+  ol.steps{margin:0;padding-left:22px} ol.steps li{margin-bottom:8px}
+  ol.steps li::marker{color:var(--brown);font-weight:700}
+  .check{list-style:none;margin:0;padding:0}
+  .check li{margin-bottom:8px}
+  .check label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+  .check input{accent-color:var(--olive);width:18px;height:18px;margin-top:2px}
+  .check input:checked + span{text-decoration:line-through;color:var(--muted)}
+  footer{margin-top:30px;font-size:12px;color:var(--muted);text-align:center}
+  @media print{.tabs{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Outfit-<span>Planer</span></h1>
+    <p>Wähle einen Stil – du siehst jedes Teil, das du für den Look brauchst.</p>
+  </header>
+  <div class="tabs" id="tabs"></div>
+  <div id="out"></div>
+  <footer>Alle Kleidungsstücke sind eigene Illustrationen – keine fremden Bilder.</footer>
+</div>
+
+<script>
+let pid=0;
+const sh=(c)=>`stroke="rgba(0,0,0,.28)" stroke-width="1.5" stroke-linejoin="round"`;
+function plaid(a,b,c2){const id='p'+(++pid);return {id,def:`<pattern id="${id}" width="18" height="18" patternUnits="userSpaceOnUse"><rect width="18" height="18" fill="${a}"/><rect y="6" width="18" height="5" fill="${b}" opacity=".75"/><rect x="6" width="5" height="18" fill="${b}" opacity=".75"/><rect y="8" width="18" height="1.5" fill="${c2}"/><rect x="8" width="1.5" height="18" fill="${c2}"/></pattern>`};}
+const BODY="M40 14L28 20L8 42L22 54L32 46V104H88V46L98 54L112 42L92 20L80 14Q60 28 40 14Z";
+const ART={
+  tee:(o)=>`<path d="${BODY}" fill="${o.c}" ${sh()}/><path d="M40 14Q60 30 80 14" fill="none" stroke="rgba(0,0,0,.3)" stroke-width="2"/>${o.print?`<text x="60" y="72" text-anchor="middle" font-family="Impact,Arial Black,sans-serif" font-size="15" fill="${o.print}" letter-spacing="1">${o.text||''}</text><path d="M44 80h32M48 86h24" stroke="${o.print}" stroke-width="2" opacity=".6"/>`:''}`,
+  shirt:(o)=>{const f=o.plaid?plaid(...o.plaid):null;return `${f?`<defs>${f.def}</defs>`:''}<path d="${BODY}" fill="${f?`url(#${f.id})`:o.c}" ${sh()}/><path d="M40 14L60 38L52 18Z M80 14L60 38L68 18Z" fill="${o.collar||o.c}" ${sh()}/><path d="M60 38V104" stroke="rgba(0,0,0,.3)" stroke-width="2"/>${[52,66,80,94].map(y=>`<circle cx="60" cy="${y}" r="2" fill="rgba(0,0,0,.35)"/>`).join('')}<path d="M22 54l10-8M98 54L88 46" stroke="rgba(0,0,0,.25)"/>`},
+  sweater:(o)=>`<path d="${BODY}" fill="${o.c}" ${sh()}/><rect x="32" y="94" width="56" height="10" fill="rgba(0,0,0,.18)"/>${[36,42,48,54,60,66,72,78,84].map(x=>`<path d="M${x} 94V104" stroke="rgba(0,0,0,.25)"/>`).join('')}<path d="M8 42L22 54L26 49L13 38Z" fill="rgba(0,0,0,.18)"/><path d="M112 42L98 54L94 49L107 38Z" fill="rgba(0,0,0,.18)"/>${o.v?`<path d="M42 14L60 42L78 14Z" fill="${o.inner||'#f2efe6'}" stroke="rgba(0,0,0,.28)" stroke-width="1.5"/>`:`<path d="M42 14Q60 24 78 14" fill="none" stroke="rgba(0,0,0,.3)" stroke-width="3"/>`}${o.cable?[44,60,76].map(x=>`<path d="M${x} 52Q${x+5} 60 ${x} 68T${x} 84" fill="none" stroke="rgba(0,0,0,.2)" stroke-width="2.5"/>`).join(''):''}`,
+  pants:(o)=>`<path d="M34 8H86L94 110H64L60 46L56 110H26Z" fill="${o.c}" ${sh()}/><path d="M34 16H86" stroke="rgba(0,0,0,.3)" stroke-width="5"/>${[40,52,68,80].map(x=>`<rect x="${x-1}" y="8" width="2.5" height="9" fill="rgba(0,0,0,.35)"/>`).join('')}<path d="M60 8V46" stroke="rgba(0,0,0,.3)"/><path d="M38 22Q44 34 52 24M82 22Q76 34 68 24" fill="none" stroke="rgba(0,0,0,.3)" stroke-width="1.5"/>${o.cord?[0,1,2,3,4,5,6].map(i=>`<path d="M${36+i*2} 40L${32+i*2} 108M${84-i*2} 40L${88-i*2} 108" stroke="rgba(0,0,0,.14)"/>`).join(''):''}${o.rip?`<path d="M36 62L52 66M36 70L50 72M70 82L84 78M72 90L86 88" stroke="#f2efe6" stroke-width="2.5" stroke-linecap="round"/>`:''}`,
+  jacket:(o)=>`<path d="M38 12L22 20L6 62L18 68L26 52V108H94V52L102 68L114 62L98 20L82 12L60 26Z" fill="${o.c}" ${sh()}/><path d="M38 12L60 26L82 12L74 8Q60 16 46 8Z" fill="${o.collar||'rgba(0,0,0,.25)'}" ${sh()}/><path d="M60 26V108" stroke="rgba(0,0,0,.35)" stroke-width="2"/><rect x="30" y="72" width="22" height="16" rx="2" fill="rgba(0,0,0,.14)" stroke="rgba(0,0,0,.3)"/><rect x="68" y="72" width="22" height="16" rx="2" fill="rgba(0,0,0,.14)" stroke="rgba(0,0,0,.3)"/>${[40,56,72].map(y=>`<circle cx="${y<50?56:64}" cy="${y+8}" r="2" fill="rgba(0,0,0,.4)"/>`).join('')}`,
+  boots:(o)=>`<path d="M24 14H56V58L94 70Q108 74 108 90V98H20Z" fill="${o.c}" ${sh()}/><rect x="16" y="96" width="94" height="10" rx="3" fill="${o.sole||'#2b2118'}"/><path d="M26 28H54M26 38H54M26 48H54" stroke="rgba(255,255,255,.35)" stroke-width="2"/>${o.stitch?`<path d="M22 94H106" stroke="${o.stitch}" stroke-width="2" stroke-dasharray="4 3"/>`:''}<path d="M24 14H56V22H24Z" fill="rgba(0,0,0,.22)"/>`,
+  loafer:(o)=>`<path d="M10 80Q12 54 42 54L58 62Q92 62 110 82V98H10Z" fill="${o.c}" ${sh()}/><rect x="8" y="96" width="104" height="9" rx="3" fill="#2b2118"/><path d="M42 54L58 62L40 66Z" fill="rgba(0,0,0,.35)"/><path d="M56 64H78V72H56Z" fill="rgba(0,0,0,.18)" stroke="rgba(0,0,0,.35)"/><circle cx="67" cy="68" r="2" fill="#d9b25c"/>`,
+  scarf:(o)=>`<path d="M30 20Q60 52 90 20L100 34Q60 72 20 34Z" fill="${o.c}" ${sh()}/><path d="M54 52H78V106H54Z" fill="${o.c}" ${sh()}/>${[0,1,2].map(i=>`<path d="M${58+i*8} 106V114" stroke="${o.c}" stroke-width="3"/>`).join('')}${[62,76,90].map(y=>`<path d="M54 ${y}H78" stroke="${o.stripe||'rgba(255,255,255,.4)'}" stroke-width="4"/>`).join('')}`,
+  belt:(o)=>`<ellipse cx="60" cy="62" rx="46" ry="30" fill="none" stroke="${o.c}" stroke-width="12"/><ellipse cx="60" cy="62" rx="46" ry="30" fill="none" stroke="rgba(0,0,0,.25)" stroke-width="1"/><rect x="48" y="26" width="24" height="18" rx="3" fill="none" stroke="#d9b25c" stroke-width="4"/><path d="M60 26V44" stroke="#d9b25c" stroke-width="3"/>`
+};
+const svg=(t,o)=>`<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${t}">${ART[t](o)}</svg>`;
+
+const OUTFITS=[
+ {id:'oldmoney',name:'Old Money',icon:'🥂',
+  lead:'<b>Zeitlos & ruhig.</b> Gedeckte Farben, feine Stoffe, keine Logos – der Look wirkt hochwertig ohne laut zu sein.',
+  pal:['#1f2c4a','#f2efe6','#cdb98f','#9a5b2e'],
+  pieces:[
+   {cat:'Oberteil',name:'Weißes Oxford-Hemd',t:'shirt',o:{c:'#f4f1e8',collar:'#f4f1e8'},cn:'Weiß',hex:'#f2efe6',spec:['Material: Baumwolle (Oxford)','Button-down-Kragen','Normale Passform, kein Slim-Fit']},
+   {cat:'Pullover',name:'Feinstrick-Pullover V-Ausschnitt',t:'sweater',o:{c:'#1f2c4a',v:true,inner:'#f4f1e8'},cn:'Dunkelblau (Navy)',hex:'#1f2c4a',spec:['Material: Merino oder Kaschmir','V-Ausschnitt, damit der Hemdkragen sichtbar bleibt','Ohne Logo']},
+   {cat:'Hose',name:'Chino',t:'pants',o:{c:'#cdb98f'},cn:'Beige',hex:'#cdb98f',spec:['Material: Baumwolltwill','Gerader Schnitt, Länge knapp über dem Schuh','Mit Bügelfalte wirkt sie eleganter']},
+   {cat:'Schuhe',name:'Loafer',t:'loafer',o:{c:'#9a5b2e'},cn:'Cognac',hex:'#9a5b2e',spec:['Glattleder','Dünne Sohle, schlichte Form','Mit dünnen Söckchen oder ohne Socken']},
+   {cat:'Accessoire',name:'Ledergürtel',t:'belt',o:{c:'#6b4a2f'},cn:'Braun',hex:'#6b4a2f',spec:['Schmale Schnalle, ohne Logo','Zur Schuhfarbe passend (Braun/Cognac)']}
+  ],
+  steps:['Hemd anziehen und in die Chino stecken.','Gürtel einfädeln – Ton passend zu den Loafern.','Pullover drüber; den Hemdkragen am V-Ausschnitt schön herausschauen lassen.','Loafer an, Hosenbein kurz über dem Schuh.'],
+  extra:'Bei Kälte: dunkelblauer Blazer oder Trenchcoat obendrüber.'},
+ {id:'country',name:'Country',icon:'🌾',
+  lead:'<b>Rustikal & gemütlich.</b> Erdtöne, Karo und Leder: der Landhaus-Look für Herbst und Winter.',
+  pal:['#5a6130','#6b4a2f','#7a2c2c','#e8dcc0'],
+  pieces:[
+   {cat:'Oberteil',name:'Flanell-Karohemd',t:'shirt',o:{plaid:['#7a2c2c','#2a2a20','#e8dcc0'],collar:'#7a2c2c'},cn:'Bordeaux-Schwarz kariert',hex:'#7a2c2c',spec:['Material: Baumwollflanell','Grobes Karomuster','Kann offen über einem Shirt getragen werden']},
+   {cat:'Jacke',name:'Wachsjacke',t:'jacket',o:{c:'#5a6130',collar:'#6b4a2f'},cn:'Oliv, brauner Cordkragen',hex:'#5a6130',spec:['Gewachste Baumwolle, wasserabweisend','Aufgesetzte Taschen','Hält bei Regen und Wind warm']},
+   {cat:'Hose',name:'Cordhose',t:'pants',o:{c:'#6b4a2f',cord:true},cn:'Braun',hex:'#6b4a2f',spec:['Material: Breitcord','Gerader oder leicht weiter Schnitt','Passt zu allen Erdtönen']},
+   {cat:'Schuhe',name:'Lederstiefel',t:'boots',o:{c:'#7b4a26',stitch:'#d9b25c'},cn:'Mittelbraun',hex:'#7b4a26',spec:['Robustes Leder, Schnürung','Profilsohle für Wetter','Hose über oder leicht in den Schaft']},
+   {cat:'Accessoire',name:'Wollschal',t:'scarf',o:{c:'#c49a2a',stripe:'#5a6130'},cn:'Senf mit Oliv-Streifen',hex:'#c49a2a',spec:['Material: Wolle oder Lammwolle','Locker einmal um den Hals']}
+  ],
+  steps:['Karohemd anziehen, bis oben zu oder die obersten Knöpfe offen.','Cordhose und Lederstiefel – Ärmel einmal umkrempeln.','Wachsjacke drüber.','Wollschal zum Schluss locker umlegen.'],
+  extra:'Mit braunem Ledergürtel wird der Look noch stimmiger.'},
+ {id:'grunge',name:'Grunge',icon:'🎸',
+  lead:'<b>Lässig & rebellisch.</b> Dunkle Farben, Layering und schwere Boots – absichtlich nicht zu perfekt.',
+  pal:['#1a1a1a','#264236','#5a1f2b','#8a8a8a'],
+  pieces:[
+   {cat:'Oberteil',name:'Band-Shirt',t:'tee',o:{c:'#1a1a1a',print:'#d9d2b8',text:'LIVE'},cn:'Schwarz mit Print',hex:'#1a1a1a',spec:['Gern Vintage oder Second-Hand','Etwas weiter geschnitten','Leicht verwaschen ist ideal']},
+   {cat:'Überhemd',name:'Flanellhemd (offen getragen)',t:'shirt',o:{plaid:['#264236','#1a1a1a','#8a8a8a'],collar:'#264236'},cn:'Dunkelgrün-Schwarz kariert',hex:'#264236',spec:['Offen über dem Shirt tragen','Eine Nummer größer ist okay','Ärmel hochkrempeln']},
+   {cat:'Hose',name:'Zerrissene Jeans',t:'pants',o:{c:'#2b2b2b',rip:true},cn:'Schwarz / Washed Black',hex:'#2b2b2b',spec:['Risse an den Knien','Gerader bis leicht weiter Schnitt','Länge so, dass die Boots sichtbar sind']},
+   {cat:'Schuhe',name:'Schwere Boots',t:'boots',o:{c:'#1a1a1a',sole:'#efe7d2',stitch:'#d9b25c'},cn:'Schwarz mit heller Sohle',hex:'#1a1a1a',spec:['Dicke Profilsohle','Schnürung, Leder oder Lederoptik','Gelbe Nähte sind typisch']}
+  ],
+  steps:['Band-Shirt anziehen.','Flanellhemd offen darüber, Ärmel hochkrempeln.','Zerrissene Jeans und Boots dazu.','Nicht zu ordentlich: ein bisschen Chaos gehört zum Stil.'],
+  extra:'Kälter? Eine dunkle Jeansjacke oder ein Parka kommt darüber.'}
+];
+
+let cur='oldmoney';
+function draw(){
+  const o=OUTFITS.find(x=>x.id===cur);
+  document.getElementById('tabs').innerHTML=OUTFITS.map(x=>`<button class="${x.id===cur?'on':''}" data-id="${x.id}">${x.icon} ${x.name}</button>`).join('');
+  document.getElementById('out').innerHTML=`
+   <div class="lead">${o.lead}<div class="pal">${o.pal.map(c=>`<i style="background:${c}"></i>`).join('')}</div></div>
+   <h2>Das brauchst du für diesen Look</h2>
+   <div class="grid">${o.pieces.map((p,i)=>`<article class="piece"><div class="art"><span class="num">${i+1}</span>${svg(p.t,p.o)}</div>
+     <div class="body"><div class="cat">${p.cat}</div><div class="nm">${p.name}</div>
+     <div class="col"><i style="background:${p.hex}"></i>${p.cn}</div>
+     <ul class="spec">${p.spec.map(s=>`<li>${s}</li>`).join('')}</ul></div></article>`).join('')}</div>
+   <div class="two" style="margin-top:22px">
+     <div class="box"><h3 style="margin-bottom:10px;color:var(--olive-d)">So ziehst du es an</h3><ol class="steps">${o.steps.map(s=>`<li>${s}</li>`).join('')}</ol><p style="margin:12px 0 0;font-size:14px;color:var(--muted)">💡 ${o.extra}</p></div>
+     <div class="box brown"><h3 style="margin-bottom:10px;color:var(--brown)">Checkliste</h3><ul class="check">${o.pieces.map((p,i)=>`<li><label><input type="checkbox"><span><b>${i+1}. ${p.name}</b><br><small>${p.cn}</small></span></label></li>`).join('')}</ul><p style="margin:10px 0 0;font-size:13px;color:var(--muted)">Hake ab, was du schon besitzt.</p></div>
+   </div>`;
+}
+document.getElementById('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(b){cur=b.dataset.id;draw();}});
+draw();
+</script>
+</body>
+</html>
